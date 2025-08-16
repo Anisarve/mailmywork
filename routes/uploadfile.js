@@ -19,21 +19,32 @@ router.post('/', upload.single('files'), (req, res) => {
     res.status(200).json({ status:true, message: 'Files uploaded successfully', filename : req.file.originalname});
 });
 
-router.post('/finalise', (req, res)=>{
-    console.log('Finalise request received:', req.body);
+router.post('/finalise', async (req, res) => {
     const { email, subject, files } = req.body;
     if (!email || !files || files.length === 0) {
         return res.status(400).json({ status: false, message: 'Email and files are required' });
     }
-    sendFiles(email, subject, files)
-        .then(() => {
-            res.status(200).json({ status: true, message: 'Files sent successfully' });
-        })
-        .catch(error => {
-            console.error('Error sending files:', error);
-            res.status(500).json({ status: false, message: 'Error sending files' });
-        });
-})
+
+    try {
+        // Send email with files first
+        await sendFiles(email, subject, files);
+
+        // Respond immediately to client
+        res.status(200).json({ status: true, message: 'Files sent successfully' });
+
+        // Then delete files asynchronously
+        await Promise.all(files.map(file => 
+            deleteFromSystem(file).then(msg => console.log(msg)).catch(err => console.error(err))
+        ));
+
+        console.log('All files deleted');
+    } catch (error) {
+        console.error('Error sending files:', error);
+        res.status(500).json({ status: false, message: 'Error sending files' });
+    }
+});
+
+
 
 router.post('/remove', (req, res) => {
     const { filename } = req.body;
