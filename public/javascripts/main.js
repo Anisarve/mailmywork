@@ -268,6 +268,7 @@ sendBtn.addEventListener("click", () => {
         if (data.status) {
           sendBtn.textContent = "Files sent successfully!";
           allFiles = [];
+          uploadList.innerHTML = '';
         } else {
           sendBtn.textContent = "Error sending files";
           setTimeout(() => {
