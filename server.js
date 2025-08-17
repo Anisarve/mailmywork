@@ -32,7 +32,9 @@ app.use('/textmail', textmailRoutes);
 
 app.get('/', (req, res) => { res.render("main"); });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`http://localhost:${PORT}`);
-});
+
+module.exports = app
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+//   console.log(`http://localhost:${PORT}`);
+// });
