@@ -34,7 +34,7 @@ app.get('/', (req, res) => { res.render("main"); });
 
 
 module.exports = app
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-//   console.log(`http://localhost:${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
+});
