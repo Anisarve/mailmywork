@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const path = require('path');
 
+
 // Configure Nodemailer transporter
 const transporter = nodemailer.createTransport({
   secure: true,
@@ -34,7 +35,6 @@ const sendFiles = (email, sub, files) => {
     path: path.join(__dirname, '../uploads', file)
   }));
 
-  console.log('Sending files:', attachments);
 
   // Return the promise so the caller can await it
   return transporter.sendMail({

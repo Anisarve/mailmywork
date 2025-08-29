@@ -118,6 +118,7 @@ function uploadFile(file){
   .then(response => response.json())
   .then(data => {
     if (data.status) {
+      fileDiv.id = data.fileUrl;
       fileDiv.querySelector(".progress-inner").classList.add('uploaded'); 
       allFiles.push(data.filename);
       return true; // Indicate successful upload
@@ -170,7 +171,6 @@ function removeFile(element) {
     if (data.status) {
       allFiles = allFiles.filter(file => file !== uniqueId+filename);
       uploadList.removeChild(fileDiv);
-      console.log('File removed successfully:', data.message);
     } else {
       alert('Error removing file: ' + data.message);
       console.error('Error removing file:', data.message);
@@ -205,7 +205,6 @@ sendBtn.addEventListener("click", () => {
     // Handle sending text content
     sendBtn.style.background = "#0a2966"; // Change button color to indicate sending
     sendBtn.textContent = "Sending...";
-    console.log(email.value.trim(), subject.value.trim(), textArea.value);
     // Send the email with text content
     fetch('/textmail/send', {
       method: 'POST',
@@ -240,7 +239,6 @@ sendBtn.addEventListener("click", () => {
 
 
   } else if (fileBtn.classList.contains("active")) {
-      console.log('All files to send:', allFiles);
       if (allFiles.length === 0) {
         sendBtn.textContent = "No files to send";
         setTimeout(() => {
@@ -251,7 +249,6 @@ sendBtn.addEventListener("click", () => {
       // Handle sending files
       sendBtn.style.background = "#0a2966"; // Change button color to indicate sending
       sendBtn.textContent = "Sending...";
-      console.log(email.value.trim(), subject.value.trim(), allFiles);
       // Send the email with files
       fetch('/upload/finalise', {
         method: 'POST',

@@ -1,11 +1,15 @@
 require('dotenv').config();
+require("./config/cron");
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const path = require('path');
 const ejsMate = require('ejs-mate');  
 const session = require('express-session');
+const mongoose = require("mongoose");
 
+// connect to mongoDB
+mongoose.connect(process.env.MONGODB_URI).then(() => console.log('Connected to Primary MongoDB')).catch((err) => console.error('Mongoose Connection Failed ', err));
 
 app.use(session({
   secret: 'keyboard cat',
@@ -26,11 +30,16 @@ app.set('trust proxy', true);
 
 const uploadRoutes = require('./routes/uploadfile');
 const textmailRoutes = require('./routes/textmail');
+const shareRoute = require('./routes/share');
+const receiveRoute = require('./routes/receive');
 app.use('/upload', uploadRoutes);
 app.use('/textmail', textmailRoutes);
+app.use('/share', shareRoute);
+app.use('/receive', receiveRoute);
 
 
 app.get('/', (req, res) => { res.render("main"); });
+app.get('/share', (req, res) => { res.render("share"); });
 
 
 module.exports = app
