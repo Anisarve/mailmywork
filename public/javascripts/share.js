@@ -75,6 +75,7 @@ function setActiveMode(mode) {
     fileBtn.classList.remove("active");
     uploadList.innerHTML = ''; // Clear the upload list
     hideShareButton();
+    hideCode();
     animateContent(`
       <div class="received-container" id="received-container">
         <input class="code-input" type="text" id="code-input" placeholder="Enter Code" />
