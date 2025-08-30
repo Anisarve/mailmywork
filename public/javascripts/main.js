@@ -23,10 +23,12 @@ function setActiveMode(mode) {
     fileBtn.classList.remove("active");
     allFiles = []; // Clear the file list
     uploadList.innerHTML = ''; // Clear the upload list
+    sendBtn.textContent = 'Send to my email';
     animateContent(`<textarea placeholder="Type or paste your text here..." id="textArea"></textarea>`);
   } else {
     fileBtn.classList.add("active");
     textBtn.classList.remove("active");
+    sendBtn.textContent = 'Send to my email';
     animateContent(`
       <label class="file-drop" id="dropZone">
         Drop your file here or click to browse
