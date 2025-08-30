@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feedback | MailMyWork.io</title>
+  <link rel="stylesheet" href="/stylesheets/feedback.css" />
+  <link rel="stylesheet" href="/stylesheets/navbar.css" />
+</head>
+<body>
+    <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">MailMyWork.io</div>
+      <ul class="nav-links">
+        <li><a href="/">Mail My Work</a></li>
+        <li><a href="/share">Share Files</a></li>
+        <li><a href="/feedback">Feedback</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+      <div class="menu-toggle" id="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Content -->
+  <div class="container">
+    <h1 class="title">Feedback Us</h1>
+    <p style="text-align:center; line-height:1.6; margin-bottom: 1.5rem;">
+      Have questions, feedback, or suggestions? We'd love to hear from you!  
+    </p>
+
+    <form class="feedback-form" style="width:100%;">
+      <input type="text" placeholder="Your Name" class="email-input" required />
+      <input type="email" placeholder="Your Email" class="email-input" required />
+      <textarea placeholder="Your Message" style="min-height:150px;" class="subject-input"></textarea>
+      <button type="submit" class="submit-btn">Send Message</button>
+    </form>
+  </div>
+
+<script src="/javascripts/navbar.js"></script>
+<script src="/javascripts/feedback.js"></script>
+</body>
+</html>

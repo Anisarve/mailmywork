@@ -31,15 +31,19 @@ app.set('trust proxy', true);
 const uploadRoutes = require('./routes/uploadfile');
 const textmailRoutes = require('./routes/textmail');
 const shareRoute = require('./routes/share');
-const receiveRoute = require('./routes/receive');
+const receiveRoute = require('./routes/receive'); 
+const feedbackRoute = require('./routes/feedback'); 
 app.use('/upload', uploadRoutes);
 app.use('/textmail', textmailRoutes);
 app.use('/share', shareRoute);
 app.use('/receive', receiveRoute);
+app.use('/feedback', feedbackRoute);
 
 
 app.get('/', (req, res) => { res.render("main"); });
 app.get('/share', (req, res) => { res.render("share"); });
+app.get('/feedback', (req, res) => { res.render("feedback"); });
+app.get('/about', (req, res) => { res.render("about"); });
 
 
 module.exports = app

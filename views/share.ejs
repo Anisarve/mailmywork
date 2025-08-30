@@ -4,10 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ShareMyWork.io</title>
-  <link rel="stylesheet" href="/stylesheets/share.css" />
+  <link rel="stylesheet" href="/stylesheets/share.css" /> 
+  <link rel="stylesheet" href="/stylesheets/navbar.css" /> 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+
+    <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">MailMyWork.io</div>
+      <ul class="nav-links">
+        <li><a href="/">Mail My Work</a></li>
+        <li><a href="/share">Share Files</a></li>
+        <li><a href="/feedback">Feedback</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+      <div class="menu-toggle" id="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+
   <div class="container">
 
     <h1 class="title">Share Content</h1>
@@ -33,5 +54,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="/javascripts/share.js"></script>
+  <script src="/javascripts/navbar.js"></script>
 </body>
 </html>

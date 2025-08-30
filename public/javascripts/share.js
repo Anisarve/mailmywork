@@ -176,6 +176,12 @@ async function handleFiles(files) {
 }
 
 async function uploadFile(file) {
+  const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+  if (file.size > maxSize) {
+    alert(`⚠️ "${file.name.substring(10)}" is larger than 10 MB. We are not supporting files above 10 MB for now due to some limitations. We are working on it. Stay happy 😊`);
+    return false;
+  }
+  
   handleButtunState(1);
 
   const formData = new FormData();
@@ -217,41 +223,6 @@ async function uploadFile(file) {
     return false; //  failed
   }
 }
-
-
-// function uploadFile(file) {
-//   handleButtunState(1);
-//   const formData = new FormData();
-//   formData.append('files', file);
-//   formData.append('code', uniqueCode);
-//   let fileDiv = displayFile(file.name); // Display the file in the list
-//   fetch('/share/upload', {
-//     method: 'POST',
-//     body: formData
-//   })
-//     .then(response => response.json())
-//     .then(data => {
-//       if (data.success) {
-//         uniqueCode = data.code;
-//         fileDiv.setAttribute("id", data.fileId);
-//         fileDiv.querySelector(".progress-inner").classList.add('uploaded');
-//         allFiles.push(data.filename);
-//         handleButtunState(-1);
-//         return true; // Indicate successful upload
-//       } else {
-//         fileDiv.querySelector(".filename").textContent = "File upload failed";
-//         fileDiv.querySelector(".progress-inner").style.background = 'red';
-//         console.error('File upload failed:', data.message);
-//         return false; // Indicate failed upload
-//       }
-//     })
-//     .catch(error => {
-//       fileDiv.querySelector(".filename").textContent = "Client Error";
-//       fileDiv.querySelector(".progress-inner").style.background = 'red';
-//       console.error('Error uploading file:', error);
-//       return false; // Indicate failed upload
-//     });
-// }
 
 
 function displayFile(filename) {

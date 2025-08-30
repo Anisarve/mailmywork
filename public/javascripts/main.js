@@ -108,6 +108,11 @@ function handleFiles(files) {
 }
 
 function uploadFile(file){
+  const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+  if (file.size > maxSize) {
+    alert(`⚠️ "${file.name.substring(10)}" is larger than 10 MB. We are not supporting files above 10 MB for now due to some limitations. We are working on it. Stay happy 😊`);
+    return false;
+  }
   const formData = new FormData();
   formData.append('files', file);
   let fileDiv = displayFile(file.name); // Display the file in the list

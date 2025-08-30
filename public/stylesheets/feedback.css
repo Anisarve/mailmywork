@@ -1,0 +1,84 @@
+/* feedback Page Styles */
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+/* General Page Layout */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0d1526, #2e425f, #00163e);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Container */
+.container {
+  flex: 1;
+  max-width: 600px;
+  width:90%;
+  margin: 5rem auto;
+  padding: 2rem;
+  background: rgba(4, 29, 63, 0.85);
+  border-radius: 8px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  text-align: center;
+  backdrop-filter: blur(12px);
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+/* Form */
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.feedback-form input,
+.feedback-form textarea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  background: #0f1824;
+  color: #fff;
+  outline: none;
+}
+
+.feedback-form input::placeholder,
+.feedback-form textarea::placeholder {
+  color: #aaa;
+}
+
+.feedback-form textarea {
+  resize: none;
+  min-height: 150px;
+}
+
+/* Submit Button */
+.submit-btn {
+  background: #1c55d0;
+  color: #fff;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+  background: #0e42b2;
+}
