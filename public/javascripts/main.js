@@ -228,6 +228,10 @@ sendBtn.addEventListener("click", () => {
       if (data.status) {
         sendBtn.textContent = "Text sent successfully!";
         textArea.value = '';
+        setTimeout(() => {
+          sendBtn.textContent = "Send to My Email";
+          sendBtn.style.background = "#1c55d0"; // Reset button color
+        }, 2000);
       } else {
         sendBtn.textContent = "Error sending text";
         setTimeout(() => {
@@ -271,6 +275,10 @@ sendBtn.addEventListener("click", () => {
       .then(data => {
         if (data.status) {
           sendBtn.textContent = "Files sent successfully!";
+          setTimeout(() => {
+          sendBtn.textContent = "Send to My Email";
+          sendBtn.style.background = "#1c55d0"; // Reset button color
+        }, 2000);
           allFiles = [];
           uploadList.innerHTML = '';
         } else {
