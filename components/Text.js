@@ -16,7 +16,7 @@ async function saveText(textContent) {
       if (!existing) isUnique = true;
     }
 
-    const content = new Text({ code, textContent, expiryDate: new Date(Date.now() + 10 * 60 * 1000) });
+    const content = new Text({ code, textContent, expiryDate: new Date(Date.now() + 1 * 60 * 1000) });
     await content.save();
     return {success:true, code};
   } catch (err) {

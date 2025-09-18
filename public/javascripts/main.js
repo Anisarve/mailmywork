@@ -233,6 +233,10 @@ sendBtn.addEventListener("click", () => {
           sendBtn.textContent = "Send to My Email";
           sendBtn.style.background = "#1c55d0"; // Reset button color
         }, 2000);
+        setTimeout(() => {
+          sendBtn.textContent = "Send to My Email";
+          sendBtn.style.background = "#1c55d0"; // Reset button color
+        }, 2000);
       } else {
         sendBtn.textContent = "Error sending text";
         setTimeout(() => {
