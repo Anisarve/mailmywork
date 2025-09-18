@@ -23,10 +23,12 @@ function setActiveMode(mode) {
     fileBtn.classList.remove("active");
     allFiles = []; // Clear the file list
     uploadList.innerHTML = ''; // Clear the upload list
+    sendBtn.textContent = 'Send to my email';
     animateContent(`<textarea placeholder="Type or paste your text here..." id="textArea"></textarea>`);
   } else {
     fileBtn.classList.add("active");
     textBtn.classList.remove("active");
+    sendBtn.textContent = 'Send to my email';
     animateContent(`
       <label class="file-drop" id="dropZone">
         Drop your file here or click to browse
@@ -225,7 +227,12 @@ sendBtn.addEventListener("click", () => {
     .then(data => {
       if (data.status) {
         sendBtn.textContent = "Text sent successfully!";
+        subject.value = '';
         textArea.value = '';
+        setTimeout(() => {
+          sendBtn.textContent = "Send to My Email";
+          sendBtn.style.background = "#1c55d0"; // Reset button color
+        }, 2000);
       } else {
         sendBtn.textContent = "Error sending text";
         setTimeout(() => {
@@ -269,6 +276,11 @@ sendBtn.addEventListener("click", () => {
       .then(data => {
         if (data.status) {
           sendBtn.textContent = "Files sent successfully!";
+          subject.value = '';
+          setTimeout(() => {
+          sendBtn.textContent = "Send to My Email";
+          sendBtn.style.background = "#1c55d0"; // Reset button color
+        }, 2000);
           allFiles = [];
           uploadList.innerHTML = '';
         } else {

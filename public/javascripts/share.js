@@ -75,6 +75,7 @@ function setActiveMode(mode) {
     fileBtn.classList.remove("active");
     uploadList.innerHTML = ''; // Clear the upload list
     hideShareButton();
+    hideCode();
     animateContent(`
       <div class="received-container" id="received-container">
         <input class="code-input" type="text" id="code-input" placeholder="Enter Code" />
@@ -181,7 +182,7 @@ async function uploadFile(file) {
     alert(`⚠️ "${file.name.substring(10)}" is larger than 10 MB. We are not supporting files above 10 MB for now due to some limitations. We are working on it. Stay happy 😊`);
     return false;
   }
-  
+
   handleButtunState(1);
 
   const formData = new FormData();

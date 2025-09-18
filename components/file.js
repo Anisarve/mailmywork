@@ -20,7 +20,7 @@ async function saveFileUrl(filename, url, defaultCode) {
         } else {
             code = defaultCode;
         }
-        const file = new File({ code, filename, url, expiryDate: new Date(Date.now() + 1 * 60 * 1000) });
+        const file = new File({ code, filename, url, expiryDate: new Date(Date.now() + 10 * 60 * 1000) });
         await file.save();
 
         return { success: true, file, code };
