@@ -24,6 +24,24 @@ function randomFilename(length = 10) {
 }
 
 // Store file with original filename
+const ApiShareFileStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../api_uploads')); // Destination folder
+  },
+  filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname); // keep extension
+        const name = path.basename(file.originalname, ext); // original name
+        const newFilename = randomFilename(20)+ext;
+        
+        // Store both names in req.file for later use
+        file.originalFileName = file.originalname;
+        file.storedFileName = newFilename;
+        
+        cb(null, newFilename);
+    }
+});
+
+// Store file with original filename
 const ShareFileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, '../public/share_uploads')); // Destination folder
@@ -52,4 +70,4 @@ const EmailFilestorage = multer.diskStorage({
 });
 
 
-module.exports = {EmailFilestorage, ShareFileStorage};
+module.exports = {EmailFilestorage, ShareFileStorage, ApiShareFileStorage};

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MailMyWork.io</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <style>
+        /* Reset */
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  background: linear-gradient(135deg, #0d0d2e, #1a2a6c, #2c5364);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+header {
+  width: 100%;
+  position: fixed;
+  top: 0; left: 0;
+  background: rgba(15, 20, 40, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #00e0ff;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links li a {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+  color: #00e0ff;
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+.menu-toggle span {
+  width: 25px; height: 3px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+/* Hero Section */
+.hero {
+  height: 100vh;
+  display: flex; justify-content: center; align-items: center;
+  text-align: center;
+  padding: 0 1rem;
+}
+.hero-content h1 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #00e0ff, #9d00ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #ddd;
+}
+.cta-btn {
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(90deg, #00e0ff, #9d00ff);
+  border: none;
+  border-radius: 30px;
+  color: #fff;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.cta-btn:hover {
+  opacity: 0.85;
+}
+
+/* Main Form */
+main {
+  padding: 6rem 1rem 3rem;
+  flex: 1;
+  display: flex; justify-content: center;
+}
+
+.container {
+  background: rgba(15, 20, 40, 0.8);
+  backdrop-filter: blur(15px);
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #00e0ff;
+}
+
+.input-field, textarea {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 10px;
+  background: #10172d;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+}
+
+textarea {
+  min-height: 180px;
+  resize: none;
+}
+
+/* Mode Toggle */
+.mode-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.mode-toggle button {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #192545;
+  color: #ddd;
+  transition: 0.3s;
+}
+.mode-toggle button.active,
+.mode-toggle button:hover {
+  background: linear-gradient(90deg, #00e0ff, #9d00ff);
+  color: #fff;
+}
+
+/* File Upload List */
+#uploadList {
+  margin: 1rem 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+#uploadList .file {
+  background: #10172d;
+  padding: 0.6rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+/* Submit */
+.submit-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background: linear-gradient(90deg, #00e0ff, #9d00ff);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.submit-btn:hover {
+  opacity: 0.85;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.85rem;
+  background: rgba(15, 20, 40, 0.9);
+  backdrop-filter: blur(8px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .menu-toggle { display: flex; }
+  .nav-links {
+    position: absolute;
+    top: 70px; right: -100%;
+    flex-direction: column;
+    background: rgba(15,20,40,0.95);
+    width: 220px;
+    padding: 1rem;
+    border-left: 2px solid #00e0ff;
+    transition: right 0.3s ease;
+  }
+  .nav-links.active { right: 0; }
+}
+
+    </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">MailMyWork.io</div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/">Mail My Work</a></li>
+        <li><a href="/share">Share Files</a></li>
+        <li><a href="/feedback">Feedback</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+      <div class="menu-toggle" id="menu-toggle">
+        <span></span><span></span><span></span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Send & Share Instantly</h1>
+      <p>Fastest way to mail yourself notes, files, and reminders. Share seamlessly with your team.</p>
+      <a href="#main" class="cta-btn">Get Started</a>
+    </div>
+  </section>
+
+  <!-- Main Section -->
+  <main id="main">
+    <div class="container">
+      <h2 class="title">Instant Self Mail</h2>
+
+      <input type="email" id="email" placeholder="Enter your email" class="input-field"/>
+      <input type="text" id="subject" placeholder="Enter subject" class="input-field"/>
+
+      <div class="mode-toggle">
+        <button id="textBtn" class="active"><i class="fa-regular fa-file-lines"></i> Text</button>
+        <button id="fileBtn"><i class="fa-solid fa-arrow-up-from-bracket"></i> File</button>
+      </div>
+
+      <div id="contentArea" class="content">
+        <textarea id="textArea" placeholder="Type or paste your text here..."></textarea>
+      </div>
+
+      <div id="uploadList"></div>
+
+      <button id="send-btn" class="submit-btn">Send to My Email</button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MailMyWork.io — Built for productivity</p>
+  </footer>
+
+  <script>
+    // Navbar toggle
+const menuToggle = document.getElementById("menu-toggle");
+const navLinks = document.getElementById("navLinks");
+
+menuToggle.addEventListener("click", () => {
+  navLinks.classList.toggle("active");
+  menuToggle.classList.toggle("active");
+});
+
+// Mode toggle
+const textBtn = document.getElementById("textBtn");
+const fileBtn = document.getElementById("fileBtn");
+const contentArea = document.getElementById("contentArea");
+const uploadList = document.getElementById("uploadList");
+
+textBtn.addEventListener("click", () => {
+  textBtn.classList.add("active");
+  fileBtn.classList.remove("active");
+  contentArea.innerHTML = `<textarea id="textArea" placeholder="Type or paste your text here..."></textarea>`;
+});
+
+fileBtn.addEventListener("click", () => {
+  fileBtn.classList.add("active");
+  textBtn.classList.remove("active");
+  contentArea.innerHTML = `
+    <div class="file-drop" id="fileDrop">
+      <p>Drag & Drop files here or click to upload</p>
+      <input type="file" id="fileInput" multiple hidden>
+    </div>
+  `;
+
+  const fileDrop = document.getElementById("fileDrop");
+  const fileInput = document.getElementById("fileInput");
+
+  fileDrop.addEventListener("click", () => fileInput.click());
+
+  fileInput.addEventListener("change", () => {
+    [...fileInput.files].forEach(file => {
+      const fileDiv = document.createElement("div");
+      fileDiv.classList.add("file");
+      fileDiv.innerText = file.name;
+      uploadList.appendChild(fileDiv);
+    });
+  });
+});
+
+  </script>
+</body>
+</html>

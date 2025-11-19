@@ -8,6 +8,12 @@ const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const mongoose = require("mongoose");
 
+const http = require("http");
+const server = http.createServer(app);
+const { setupSocket } = require("./socket");
+console.log(setupSocket);
+setupSocket(server); 
+
 // connect to mongoDB
 mongoose.connect(process.env.MONGODB_URI).then(() => console.log('Connected to Primary MongoDB')).catch((err) => console.error('Mongoose Connection Failed ', err));
 
@@ -17,7 +23,6 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: true, maxAge: 60 * 60 * 24 }
 }))
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,21 +38,22 @@ const textmailRoutes = require('./routes/textmail');
 const shareRoute = require('./routes/share');
 const receiveRoute = require('./routes/receive'); 
 const feedbackRoute = require('./routes/feedback'); 
+const queryRoute = require('./routes/query'); 
+
 app.use('/upload', uploadRoutes);
 app.use('/textmail', textmailRoutes);
 app.use('/share', shareRoute);
 app.use('/receive', receiveRoute);
 app.use('/feedback', feedbackRoute);
+app.use('/api/query', queryRoute);
 
 
 app.get('/', (req, res) => { res.render("main"); });
 app.get('/share', (req, res) => { res.render("share"); });
 app.get('/feedback', (req, res) => { res.render("feedback"); });
 app.get('/about', (req, res) => { res.render("about"); });
+app.get('/large-file', (req, res) => { res.render("largefile"); });
 
-
-module.exports = app
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+server.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
 });

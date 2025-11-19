@@ -72,4 +72,30 @@ const sendFeedback = (userName, userEmail, feedback) => {
   });
 };
 
-module.exports = { sendText, sendFiles, sendFeedback };
+// Function to send text content
+const sendTextAPI = (email, sub, message) => {
+  return transporter.sendMail({
+    to: email,
+    subject: sub,
+    html: message
+  });
+};
+
+
+// Function to send files
+const sendFilesAPI = (email, sub, filename) => {
+  const attachments = files.map(file => ({
+    filename: filename,
+    path: path.join(__dirname, '../uploads', filename)
+  }));
+
+  // Return the promise so the caller can await it
+  return transporter.sendMail({
+    to: email,
+    subject: sub,
+    html: 'Attached file(s):',
+    attachments
+  });
+};
+
+module.exports = { sendText, sendFiles, sendFeedback, sendTextAPI, sendFilesAPI };
