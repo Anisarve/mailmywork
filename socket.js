@@ -9,89 +9,110 @@ function setupSocket(server) {
     }
   });
 
+  // roomId → { sender: socketId, receiver: socketId }
+  const rooms = {};
+
   io.on("connection", (socket) => {
     console.log("Device connected:", socket.id);
-
-    // Track last joined room
     socket.activeRoom = null;
+    socket.role = null;
 
-    // User joins room
+    // JOIN ROOM
     socket.on("join-room", ({ roomId, role }) => {
-      if (!roomId) {
-        socket.emit("error-message", "Invalid Room ID");
+      if (!roomId || !role) {
+        socket.emit("error-message", "Invalid join parameters");
         return;
+      }
+
+      // Create room entry if not exist
+      if (!rooms[roomId]) {
+        rooms[roomId] = { sender: null, receiver: null };
+      }
+
+      const room = rooms[roomId];
+
+      // role check
+      if (role === "sender") {
+        if (room.sender) {
+          socket.emit("error-message", "Sender already present in room.");
+          return;
+        }
+        room.sender = socket.id;
+      }
+
+      if (role === "receiver") {
+        if (room.receiver) {
+          socket.emit("error-message", "Receiver already present in room.");
+          return;
+        }
+        room.receiver = socket.id;
       }
 
       socket.join(roomId);
       socket.activeRoom = roomId;
+      socket.role = role;
 
-      const clients = io.sockets.adapter.rooms.get(roomId);
+      console.log(`User ${socket.id} joined room ${roomId} as ${role}`);
 
-      if (!clients) return;
-
-      // First device (usually sender)
-      if (clients.size === 1 && role === "sender") {
-        socket.emit("room-status", {
-          status: "waiting",
-          message: "Waiting for receiver..."
-        });
-        console.log(`Room ${roomId} created by sender ${socket.id}`);
-      }
-
-      // Second device joins → pairing success
-      if (clients.size === 2) {
+      // pairing logic
+      if (room.sender && room.receiver) {
         io.to(roomId).emit("room-status", {
           status: "connected",
           message: "Paired successfully. Start transfer."
         });
-        console.log(`Room ${roomId} paired successfully.`);
-      }
-
-      // More than 2 clients not allowed
-      if (clients.size > 2) {
-        socket.leave(roomId);
-        socket.activeRoom = null;
-        socket.emit("error-message", "Room full. Only 2 devices allowed.");
+      } else {
+        socket.emit("room-status", {
+          status: "waiting",
+          message: "Waiting for the other device..."
+        });
       }
     });
 
-    // Receive file metadata
+    // META
     socket.on("file-meta", ({ roomId, filename, totalSize, totalChunks }) => {
       socket.to(roomId).emit("file-meta", { filename, totalSize, totalChunks });
     });
 
-    // Receive file chunk (with seq)
+    // CHUNK
     socket.on("file-chunk", ({ roomId, seq, chunk, size, totalChunks }) => {
       socket.to(roomId).emit("file-chunk", { seq, chunk, size, totalChunks });
     });
 
-    // Sender signals file complete
+    // COMPLETE
     socket.on("file-complete", ({ roomId, filename, totalChunks }) => {
       socket.to(roomId).emit("file-complete", { filename, totalChunks });
     });
 
-    // Receiver requests resend of a missing chunk
+    // RESEND REQUEST
     socket.on("resend-request", ({ roomId, seq }) => {
-      console.log(`Receiver requested resend for chunk seq=${seq} in room=${roomId}`);
       socket.to(roomId).emit("resend-request", { seq });
     });
 
-    // Custom errors (sender → receiver or receiver → sender)
+    // ERROR
     socket.on("send-error", ({ roomId, message }) => {
       io.to(roomId).emit("error-message", message || "Transfer error");
     });
 
-    // Handle disconnect
+    // DISCONNECT
     socket.on("disconnect", () => {
       console.log("Device disconnected:", socket.id);
 
       const roomId = socket.activeRoom;
-      if (roomId) {
-        socket.to(roomId).emit("error-message", "Peer disconnected. Transfer aborted.");
+      if (!roomId || !rooms[roomId]) return;
+
+      const room = rooms[roomId];
+
+      if (room.sender === socket.id) room.sender = null;
+      if (room.receiver === socket.id) room.receiver = null;
+
+      socket.to(roomId).emit("error-message", "Peer disconnected. Transfer aborted.");
+
+      if (!room.sender && !room.receiver) {
+        delete rooms[roomId];
       }
     });
-
   });
+
   return io;
 }
 
