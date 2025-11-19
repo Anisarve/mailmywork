@@ -63,8 +63,15 @@ function setupSocket(server) {
     // ---- If someone disconnects ----
     socket.on("disconnect", () => {
       console.log("Device disconnected:", socket.id);
-      io.emit("error-message", "A device disconnected. Transfer aborted.");
+
+      // socket.rooms contains all rooms, including its own ID
+      const rooms = [...socket.rooms].filter(r => r !== socket.id);
+
+      rooms.forEach(roomId => {
+        socket.to(roomId).emit("error-message", "Peer disconnected. Transfer aborted.");
+      });
     });
+
   });
 
   return io;
