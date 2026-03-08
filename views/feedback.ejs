@@ -1,25 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Feedback | MailMyWork.io</title>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-95YQNPYWYM"></script>
   <script src="/javascripts/google_analytics.js"></script>
+  <!-- Link main.css since it has base container/input styles -->
+  <link rel="stylesheet" href="/stylesheets/main.css" />
   <link rel="stylesheet" href="/stylesheets/feedback.css" />
   <link rel="stylesheet" href="/stylesheets/navbar.css" />
+  <link rel="manifest" href="/manifest.json" />
 </head>
+
 <body>
-    <!-- Navbar -->
+  <!-- SVG Definitions -->
+  <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#00f0ff" />
+    </linearGradient>
+  </svg>
+
+  <!-- Navbar -->
   <header>
     <nav class="navbar">
-      <div class="logo">MailMyWork.io</div>
+      <div class="logo">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none"
+            stroke="url(#logoGradient)" stroke-width="2" />
+          <path d="M22 6l-10 7L2 6" fill="none" stroke="url(#logoGradient)" stroke-width="2" />
+        </svg>
+        MailMyWork.io
+      </div>
       <ul class="nav-links">
         <li><a href="/">Mail My Work</a></li>
         <li><a href="/share">Share Files</a></li>
         <li><a href="/large-file">Large Files</a></li>
-        <li><a href="/feedback">Feedback</a></li>
+        <li><a href="/feedback" class="active">Feedback</a></li>
         <li><a href="/about">About</a></li>
+        <li><a href="/help">Help</a></li>
       </ul>
       <div class="menu-toggle" id="menu-toggle">
         <span></span>
@@ -31,20 +52,26 @@
 
   <!-- Content -->
   <div class="container">
-    <h1 class="title">Feedback Us</h1>
-    <p style="text-align:center; line-height:1.6; margin-bottom: 1.5rem;">
-      Have questions, feedback, or suggestions? We'd love to hear from you!  
+    <h1 class="title">Feedback</h1>
+    <p style="text-align:center; line-height:1.6; margin-bottom: 2rem; color:var(--text-muted);">
+      Have questions, feedback, or suggestions? We'd love to hear from you and improve your experience!
     </p>
 
     <form class="feedback-form" style="width:100%;">
       <input type="text" placeholder="Your Name" class="email-input" required />
       <input type="email" placeholder="Your Email" class="email-input" required />
-      <textarea placeholder="Your Message" style="min-height:150px;" class="subject-input"></textarea>
-      <button type="submit" class="submit-btn">Send Message</button>
+      <textarea placeholder="Your Message" style="min-height:150px; margin-bottom: 0;" class="subject-input"></textarea>
+
+      <button type="submit" class="submit-btn" style="margin-top:1.5rem;">Send Message</button>
     </form>
   </div>
 
-<script src="/javascripts/navbar.js"></script>
-<script src="/javascripts/feedback.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="/javascripts/navbar.js"></script>
+  <script src="/javascripts/feedback.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+  </script>
 </body>
+
 </html>

@@ -1,26 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MailMyWork.io</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MailMyWork.io - Large Files</title>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-95YQNPYWYM"></script>
   <script src="/javascripts/google_analytics.js"></script>
+  <!-- Reuse main.css for base UI styles -->
+  <link rel="stylesheet" href="/stylesheets/main.css" />
   <link rel="stylesheet" href="/stylesheets/largefile.css" />
   <link rel="stylesheet" href="/stylesheets/navbar.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="manifest" href="/manifest.json" />
 </head>
+
 <body>
-    <!-- Navbar -->
+  <!-- SVG Definitions -->
+  <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#00f0ff" />
+    </linearGradient>
+  </svg>
+
+  <!-- Navbar -->
   <header>
     <nav class="navbar">
-      <div class="logo">MailMyWork.io</div>
+      <div class="logo">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none"
+            stroke="url(#logoGradient)" stroke-width="2" />
+          <path d="M22 6l-10 7L2 6" fill="none" stroke="url(#logoGradient)" stroke-width="2" />
+        </svg>
+        MailMyWork.io
+      </div>
       <ul class="nav-links">
         <li><a href="/">Mail My Work</a></li>
         <li><a href="/share">Share Files</a></li>
-        <li><a href="/large-file">Large Files</a></li>
+        <li><a href="/large-file" class="active">Large Files</a></li>
         <li><a href="/feedback">Feedback</a></li>
         <li><a href="/about">About</a></li>
+        <li><a href="/help">Help</a></li>
       </ul>
       <div class="menu-toggle" id="menu-toggle">
         <span></span>
@@ -30,82 +50,113 @@
     </nav>
   </header>
 
+  <div class="container">
 
-<div class="container">
-
-  <!-- Tabs -->
-  <div class="mode-toggle" style="margin-bottom: 1.5rem;">
-    <button id="shareTab" class="active">
-      <i class="fa-solid fa-share-nodes"></i> Share
-    </button>
-    <button id="receiveTab">
-      <i class="fa-solid fa-download"></i> Receive
-    </button>
-  </div>
-
-  <!-- Content -->
-  <div id="shareContent" class="content">
-
-    <h2 style="margin-bottom:1rem; text-align:center;">Share File</h2>
-
-    <!-- Generated Code -->
-    <div class="generated-code-box" id="generatedCodeBox" style="display:none;">
-      <p style="font-size:1.2rem; text-align:center; letter-spacing:3px;" id="generatedCode"></p>
-      <p style="font-size:0.9rem; text-align:center; margin-top:5px;">Connecting...</p>
+    <!-- Tabs -->
+    <div class="mode-toggle" style="margin-bottom: 2rem;">
+      <button id="shareTab" class="active">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z" />
+        </svg>
+        Share
+      </button>
+      <button id="receiveTab">
+        <svg viewBox="0 0 24 24">
+          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+        </svg>
+        Receive
+      </button>
     </div>
 
-    <!-- Share Button -->
-    <button class="submit-btn" id="generateCodeBtn" style="margin-top:1.5rem;">
-      Generate Code & Connect
-    </button>
+    <!-- Content -->
+    <div id="shareContent" class="content">
 
-    <button class="submit-btn" id="shareFileBtn" style="margin-top:1rem; display:none;">
-      Share File
-    </button>
+      <h2 style="margin-bottom:1.5rem; text-align:center; font-family:'Rajdhani', sans-serif; letter-spacing:1px;">Share
+        Large File</h2>
 
-    <!-- Progress Bar -->
-    <div class="progress-area" id="shareProgress" style="display:none; width:100%; margin-top:20px;">
-      <div class="progress-outer" style="width:100%; height:4px; background:#0f1824;">
-        <div class="progress-inner" id="shareProgressBar" style="height:100%; width:0%; background:#1c55d0;"></div>
+      <!-- Generated Code -->
+      <div class="generated-code-box" id="generatedCodeBox"
+        style="display:none; background:rgba(0,0,0,0.3); padding:20px; border-radius:8px; border:1px solid var(--border-subtle); margin-bottom:1.5rem;">
+        <p style="font-size:2rem; text-align:center; letter-spacing:4px; font-family:'Rajdhani', sans-serif; color:var(--accent-cyan); text-shadow:var(--glow-cyan);"
+          id="generatedCode"></p>
+        <p style="font-size:0.9rem; text-align:center; margin-top:10px; color:var(--text-muted);">Awaiting Receiver
+          Connection...</p>
       </div>
-      <p id="shareProgressText" style="font-size:0.85rem; margin-top:8px; text-align:center;">0%</p>
-    </div>
 
-  </div>
+      <!-- Share Button -->
+      <button class="submit-btn" id="generateCodeBtn">
+        Generate Code & Connect
+      </button>
 
+      <button class="submit-btn" id="shareFileBtn" style="margin-top:1rem; display:none;">
+        Share Selected File
+      </button>
 
-  <!-- RECEIVE CONTENT -->
-  <div id="receiveContent" class="content" style="display:none;">
-
-    <h2 style="margin-bottom:1rem; text-align:center;">Receive File</h2>
-
-    <label for="receiveCode" style="margin-bottom:0.5rem; display:block;">Enter code to connect to socket</label>
-    <input type="text" id="receiveCode" maxlength="6" placeholder="6-digit code"
-      class="subject-input" style="letter-spacing:3px; text-align:center;">
-
-    <button class="submit-btn" id="connectReceiverBtn" style="margin-top:1rem;">
-      Connect
-    </button>
-
-    <!-- Progress Bar -->
-    <div class="progress-area" id="receiveProgress" style="display:none; width:100%; margin-top:20px;">
-      <div class="progress-outer" style="width:100%; height:4px; background:#0f1824;">
-        <div class="progress-inner" id="receiveProgressBar" style="height:100%; width:0%; background:#1c55d0;"></div>
+      <!-- Progress Bar -->
+      <div class="progress-area" id="shareProgress" style="display:none; width:100%; margin-top:25px;">
+        <div class="progress-outer"
+          style="width:100%; height:8px; background:rgba(0,0,0,0.5); border-radius:4px; overflow:hidden;">
+          <div class="progress-inner" id="shareProgressBar"
+            style="height:100%; width:0%; background:linear-gradient(90deg, var(--accent-indigo), var(--accent-cyan)); box-shadow:var(--glow-cyan);">
+          </div>
+        </div>
+        <p id="shareProgressText"
+          style="font-size:0.9rem; margin-top:12px; text-align:center; font-family:'Rajdhani', sans-serif;">0%</p>
       </div>
-      <p id="receiveProgressText" style="font-size:0.85rem; margin-top:8px; text-align:center;">0%</p>
+
     </div>
 
-    <!-- Download Button -->
-    <button class="submit-btn" id="downloadFileBtn" style="margin-top:1rem; display:none;">
-      Download File
-    </button>
 
+    <!-- RECEIVE CONTENT -->
+    <div id="receiveContent" class="content" style="display:none;">
+
+      <h2 style="margin-bottom:1.5rem; text-align:center; font-family:'Rajdhani', sans-serif; letter-spacing:1px;">
+        Receive File</h2>
+
+      <label for="receiveCode"
+        style="margin-bottom:0.8rem; display:block; color:var(--text-muted); text-align:center;">Enter exactly 6
+        characters to pair</label>
+      <input type="text" id="receiveCode" maxlength="6" placeholder="------" class="subject-input"
+        style="letter-spacing:8px; text-align:center; font-size:1.5rem; font-family:'Rajdhani', sans-serif; text-transform:uppercase;">
+
+      <button class="submit-btn" id="connectReceiverBtn" style="margin-top:1rem;">
+        Connect to Sender
+      </button>
+
+      <!-- Accept Incoming File (Pre-Download) -->
+      <button class="submit-btn" id="acceptFileBtn"
+        style="margin-top:1rem; display:none; background:linear-gradient(45deg, #10b981, #059669);">
+        Accept Incoming File
+      </button>
+
+      <!-- Progress Bar -->
+      <div class="progress-area" id="receiveProgress" style="display:none; width:100%; margin-top:25px;">
+        <div class="progress-outer"
+          style="width:100%; height:8px; background:rgba(0,0,0,0.5); border-radius:4px; overflow:hidden;">
+          <div class="progress-inner" id="receiveProgressBar"
+            style="height:100%; width:0%; background:linear-gradient(90deg, var(--accent-cyan), var(--accent-indigo)); box-shadow:var(--glow-indigo);">
+          </div>
+        </div>
+        <p id="receiveProgressText"
+          style="font-size:0.9rem; margin-top:12px; text-align:center; font-family:'Rajdhani', sans-serif;">0%</p>
+      </div>
+
+      <!-- Download Button (Fallback) -->
+      <button class="submit-btn" id="downloadFileBtn" style="margin-top:1rem; display:none;">
+        Save Received File
+      </button>
+
+    </div>
   </div>
-</div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/javascripts/navbar.js"></script>
   <script src="/javascripts/largefile.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+  </script>
 </body>
+
 </html>

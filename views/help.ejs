@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Help Guide | MailMyWork.io</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-95YQNPYWYM"></script>
+    <script src="/javascripts/google_analytics.js"></script>
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+    <link rel="stylesheet" href="/stylesheets/help.css" />
+    <link rel="stylesheet" href="/stylesheets/navbar.css" />
+    <link rel="manifest" href="/manifest.json" />
+</head>
+
+<body>
+    <!-- SVG Definitions -->
+    <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="100%" stop-color="#00f0ff" />
+        </linearGradient>
+    </svg>
+
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none"
+                        stroke="url(#logoGradient)" stroke-width="2" />
+                    <path d="M22 6l-10 7L2 6" fill="none" stroke="url(#logoGradient)" stroke-width="2" />
+                </svg>
+                MailMyWork.io
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Mail My Work</a></li>
+                <li><a href="/share">Share Files</a></li>
+                <li><a href="/large-file">Large Files</a></li>
+                <li><a href="/feedback">Feedback</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/help" class="active">Help</a></li>
+            </ul>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Content -->
+    <div class="container help-container">
+        <h1 class="title">Help Guide</h1>
+        <p class="subtitle">Everything you need to know to use MailMyWork.io at lightning speed.</p>
+
+        <div class="faq-list">
+            <!-- FAQ 1 -->
+            <div class="faq-item">
+                <button class="faq-question">What is Instant Self Mail?</button>
+                <div class="faq-answer">
+                    <p>Instant Self Mail is our core feature. Simply paste your text or drop a file, enter your own
+                        email address, and hit send. It arrives in your inbox instantly! It's perfect for quickly saving
+                        links, notes, or documents to yourself without needing to draft a full email.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="faq-item">
+                <button class="faq-question">How does "Share Files" work?</button>
+                <div class="faq-answer">
+                    <p>Go to the <strong>Share Files</strong> tab, select your files, and click Share. We generate a
+                        temporary 6-digit code. The receiver just types that code into the "Receive" section on their
+                        own device, and the files download immediately. It completely skips sending links or emails!</p>
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="faq-item">
+                <button class="faq-question">What makes "Large Files" different?</button>
+                <div class="faq-answer">
+                    <p>For files over 10MB, we use WebRTC technology. This means the file is sent <strong>Directly
+                            (Peer-to-Peer)</strong> from your computer to the receiver's computer. It doesn't save
+                        permanently on our servers, which means there are zero limits on file size! Both Sender and
+                        Receiver just need to stay on the page until the transfer hits 100%.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 4 -->
+            <div class="faq-item">
+                <button class="faq-question">Can I install MailMyWork as an App?</button>
+                <div class="faq-answer">
+                    <p>Yes! MailMyWork is a Progressive Web App (PWA). If you are on Google Chrome, Edge, or Safari,
+                        look for the "Install" or "Add to Home Screen" button in your browser address bar/menu. Once
+                        installed, you can share pictures or files directly from your phone's native Share Menu straight
+                        into MailMyWork!</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="/javascripts/navbar.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+
+        // Simple Accordion Logic for Help Page
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.parentElement;
+                const answer = item.querySelector('.faq-answer');
+
+                // Toggle Active state and expand/collapse animation
+                if (item.classList.contains('active')) {
+                    item.classList.remove('active');
+                    gsap.to(answer, { height: 0, opacity: 0, padding: "0 1rem", duration: 0.3 });
+                } else {
+                    faqQuestions.forEach(q => {
+                        q.parentElement.classList.remove('active');
+                        gsap.to(q.parentElement.querySelector('.faq-answer'), { height: 0, opacity: 0, padding: "0 1rem", duration: 0.3 });
+                    });
+                    item.classList.add('active');
+                    gsap.to(answer, { height: "auto", opacity: 1, padding: "1rem", duration: 0.4 });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

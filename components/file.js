@@ -1,5 +1,6 @@
 const generateCode = require('../utils/code_generator');
 const File = require("../models/fileModel");
+const { preWarmCache } = require("./fetch");
 const fs = require("fs").promises;
 const path = require('path');
 
@@ -22,6 +23,14 @@ async function saveFileUrl(filename, url, defaultCode) {
         }
         const file = new File({ code, filename, url, expiryDate: new Date(Date.now() + 10 * 60 * 1000) });
         await file.save();
+
+        // Note: For files, we ideally want to fetch the current array, append this, and set it.
+        // However, since `saveFileUrl` handles one file at a time during the upload loop,
+        // it's safer to let the first receiver query DB to build the full array,
+        // OR we can query the DB *right now* and cache the updated list.
+        const allFilesForCode = await File.find({ code });
+        const fileArray = allFilesForCode.map(f => ({ name: f.filename, url: f.url }));
+        preWarmCache(code, 'file', fileArray);
 
         return { success: true, file, code };
     } catch (err) {
@@ -51,14 +60,14 @@ async function deleteFileById(id) {
 
 // Delete file from local folder
 const deleteFile = async (url) => {
-  try {
-    const filePath = path.join(__dirname, "../public/share_uploads/", url);
-    await fs.unlink(filePath); // Promise version, no callback needed
-    return { result: "ok" };
-  } catch (error) {
-    console.error("Error deleting file:", error);
-    return { result: error };
-  }
+    try {
+        const filePath = path.join(__dirname, "../public/share_uploads/", url);
+        await fs.unlink(filePath); // Promise version, no callback needed
+        return { result: "ok" };
+    } catch (error) {
+        console.error("Error deleting file:", error);
+        return { result: error };
+    }
 };
 module.exports = { saveFileUrl, deleteFileById };
 

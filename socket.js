@@ -1,115 +1,81 @@
-// /socket.js
+// socket.js
 const { Server } = require("socket.io");
 
 function setupSocket(server) {
   const io = new Server(server, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
-    }
+    cors: { origin: "*", methods: ["GET", "POST"] }
   });
-
-  // roomId → { sender: socketId, receiver: socketId }
-  const rooms = {};
 
   io.on("connection", (socket) => {
     console.log("Device connected:", socket.id);
+
     socket.activeRoom = null;
-    socket.role = null;
 
-    // JOIN ROOM
-    socket.on("join-room", ({ roomId, role }) => {
-      if (!roomId || !role) {
-        socket.emit("error-message", "Invalid join parameters");
-        return;
-      }
-
-      // Create room entry if not exist
-      if (!rooms[roomId]) {
-        rooms[roomId] = { sender: null, receiver: null };
-      }
-
-      const room = rooms[roomId];
-
-      // role check
-      if (role === "sender") {
-        if (room.sender) {
-          socket.emit("error-message", "Sender already present in room.");
-          return;
-        }
-        room.sender = socket.id;
-      }
-
-      if (role === "receiver") {
-        if (room.receiver) {
-          socket.emit("error-message", "Receiver already present in room.");
-          return;
-        }
-        room.receiver = socket.id;
-      }
+    // User joins a room
+    socket.on("join-room", ({ roomId }) => {
+      if (!roomId) return socket.emit("error-message", "Invalid room");
 
       socket.join(roomId);
       socket.activeRoom = roomId;
-      socket.role = role;
 
-      console.log(`User ${socket.id} joined room ${roomId} as ${role}`);
+      const clients = io.sockets.adapter.rooms.get(roomId) || new Set();
 
-      // pairing logic
-      if (room.sender && room.receiver) {
-        io.to(roomId).emit("room-status", {
-          status: "connected",
-          message: "Paired successfully. Start transfer."
-        });
+      if (clients.size === 1) {
+        io.to(roomId).emit("room-status", "waiting");
+      } else if (clients.size === 2) {
+        io.to(roomId).emit("room-status", "connected");
       } else {
-        socket.emit("room-status", {
-          status: "waiting",
-          message: "Waiting for the other device..."
-        });
+        socket.leave(roomId);
+        socket.emit("error-message", "Room full (2 max)");
       }
     });
 
-    // META
-    socket.on("file-meta", ({ roomId, filename, totalSize, totalChunks }) => {
-      socket.to(roomId).emit("file-meta", { filename, totalSize, totalChunks });
+    // -----------------------------------------------------
+    //                 WebRTC Signaling
+    // -----------------------------------------------------
+    socket.on("webrtc-offer", (roomId, data) => {
+      socket.to(roomId).emit("webrtc-offer", data);
     });
 
-    // CHUNK
-    socket.on("file-chunk", ({ roomId, seq, chunk, size, totalChunks }) => {
-      socket.to(roomId).emit("file-chunk", { seq, chunk, size, totalChunks });
+    socket.on("webrtc-answer", (roomId, data) => {
+      socket.to(roomId).emit("webrtc-answer", data);
     });
 
-    // COMPLETE
-    socket.on("file-complete", ({ roomId, filename, totalChunks }) => {
-      socket.to(roomId).emit("file-complete", { filename, totalChunks });
+    socket.on("webrtc-ice-candidate", (roomId, data) => {
+      socket.to(roomId).emit("webrtc-ice-candidate", data);
     });
 
-    // RESEND REQUEST
-    socket.on("resend-request", ({ roomId, seq }) => {
-      socket.to(roomId).emit("resend-request", { seq });
+    // -----------------------------------------------------
+    //                  Fallback Relay Mode
+    // -----------------------------------------------------
+
+    socket.on("fallback-ready", (roomId) => {
+      socket.to(roomId).emit("fallback-ready");
     });
 
-    // ERROR
-    socket.on("send-error", ({ roomId, message }) => {
-      io.to(roomId).emit("error-message", message || "Transfer error");
+    socket.on("fallback-meta", (roomId, meta) => {
+      socket.to(roomId).emit("fallback-meta", meta);
     });
 
-    // DISCONNECT
+    socket.on("fallback-chunk", (roomId, payload) => {
+      socket.to(roomId).emit("fallback-chunk", payload);
+    });
+
+    socket.on("fallback-complete", (roomId, payload) => {
+      socket.to(roomId).emit("fallback-complete", payload);
+    });
+
+    socket.on("fallback-resend", (roomId, seq) => {
+      socket.to(roomId).emit("fallback-resend", seq);
+    });
+
+    // -----------------------------------------------------
+    //                   Clean Disconnect
+    // -----------------------------------------------------
     socket.on("disconnect", () => {
       console.log("Device disconnected:", socket.id);
-
-      const roomId = socket.activeRoom;
-      if (!roomId || !rooms[roomId]) return;
-
-      const room = rooms[roomId];
-
-      if (room.sender === socket.id) room.sender = null;
-      if (room.receiver === socket.id) room.receiver = null;
-
-      socket.to(roomId).emit("error-message", "Peer disconnected. Transfer aborted.");
-
-      if (!room.sender && !room.receiver) {
-        delete rooms[roomId];
-      }
+      if (socket.activeRoom)
+        socket.to(socket.activeRoom).emit("peer-disconnected");
     });
   });
 

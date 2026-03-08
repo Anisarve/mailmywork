@@ -12,8 +12,7 @@ let allFiles = [];
 let uniqueCode = '';
 let filesUploading = 0;
 
-// Initial container fade-in
-gsap.to(container, { opacity: 1, duration: 1, y: 0 });
+// Initial container fade-in handled globally by navbar.js
 
 function hideCode() {
   code.style.display = "none";
@@ -148,83 +147,116 @@ function animateContent(newContent) {
 async function handleFile() {
   const fileInput = document.getElementById("fileInput");
   if (fileInput.files.length > 0) {
-    for (let i = 0; i < fileInput.files.length; i++) {
-      const originalFile = fileInput.files[i];
-      const renamedFile = new File([originalFile], originalFile.name, {
-        type: originalFile.type,
-        lastModified: originalFile.lastModified
-      });
-      if (await uploadFile(renamedFile)) {
-        allFiles.push(renamedFile.name);
-      }
-    }
+    handleFiles(fileInput.files);
   } else {
     alert("Please select a file to upload.");
   }
 }
 
-
-// Handle and display files
+// Handle and display files CONCURRENTLY
 async function handleFiles(files) {
+  const uploadPromises = [];
+
   for (let i = 0; i < files.length; i++) {
     const originalFile = files[i];
     const renamedFile = new File([originalFile], originalFile.name, {
       type: originalFile.type,
       lastModified: originalFile.lastModified
     });
-    if (await uploadFile(renamedFile)) {
-      allFiles.push(renamedFile.name);
-    }
+
+    // Start upload immediately and push the promise to array
+    uploadPromises.push(uploadFile(renamedFile));
+  }
+
+  // Wait for ALL concurrent uploads to settle
+  await Promise.allSettled(uploadPromises);
+
+  if (files.length > 0 && uniqueCode) {
+    window.saveToHistory('share-file', `Shared ${files.length} file(s)`, uniqueCode);
   }
 }
 
-async function uploadFile(file) {
-  const maxSize = 10 * 1024 * 1024; // 10MB in bytes
-  if (file.size > maxSize) {
-    alert(`⚠️ "${file.name.substring(10)}" is larger than 10 MB. We are not supporting files above 10 MB for now due to some limitations. We are working on it. Stay happy 😊`);
-    return false;
-  }
+// Upload File using XMLHttpRequest to track EXACT progress
+function uploadFile(file) {
+  return new Promise((resolve) => {
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    if (file.size > maxSize) {
+      alert(`⚠️ "${file.name.substring(10)}" is larger than 10 MB. We are not supporting files above 10 MB for now due to some limitations. We are working on it. Stay happy 😊`);
+      resolve(false);
+      return;
+    }
 
-  handleButtunState(1);
+    handleButtunState(1);
 
-  const formData = new FormData();
-  formData.append('files', file);
-  formData.append('code', uniqueCode);
+    const formData = new FormData();
+    formData.append('files', file);
+    formData.append('code', uniqueCode);
 
-  let fileDiv = displayFile(file.name); // Display the file in the list
+    let fileDiv = displayFile(file.name); // Display the file in the list
+    let progressBar = fileDiv.querySelector(".progress-inner");
+    let filenameDisplay = fileDiv.querySelector(".filename");
 
-  try {
-    const response = await fetch('/share/upload', {
-      method: 'POST',
-      body: formData
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/share/upload', true);
+
+    // Listen for real-time progress events
+    xhr.upload.addEventListener("progress", (event) => {
+      if (event.lengthComputable) {
+        const percentComplete = Math.round((event.loaded / event.total) * 100);
+        progressBar.style.width = percentComplete + '%';
+
+        // Change color dynamically based on progress
+        if (percentComplete === 100) {
+          progressBar.style.background = 'var(--accent-cyan)';
+        }
+      }
     });
 
-    const data = await response.json();
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          if (data.success) {
+            uniqueCode = data.code;
+            fileDiv.setAttribute("id", data.fileId);
+            progressBar.classList.add('uploaded');
+            progressBar.style.width = '100%';
 
-    if (data.success) {
-      uniqueCode = data.code;
+            allFiles.push(data.filename);
+            handleButtunState(-1);
 
-      fileDiv.setAttribute("id", data.fileId);
-      fileDiv.querySelector(".progress-inner").classList.add('uploaded');
+            resolve(true);
+          } else {
+            filenameDisplay.textContent = "Upload failed";
+            progressBar.style.background = 'red';
+            console.error('File upload failed:', data.message);
+            handleButtunState(-1);
+            resolve(false);
+          }
+        } catch (e) {
+          filenameDisplay.textContent = "Server Error";
+          progressBar.style.background = 'red';
+          handleButtunState(-1);
+          resolve(false);
+        }
+      } else {
+        filenameDisplay.textContent = "Network Error";
+        progressBar.style.background = 'red';
+        handleButtunState(-1);
+        resolve(false);
+      }
+    };
 
-      allFiles.push(data.filename);
+    xhr.onerror = function () {
+      filenameDisplay.textContent = "Client Error";
+      progressBar.style.background = 'red';
+      console.error('Error uploading file');
       handleButtunState(-1);
+      resolve(false);
+    };
 
-      return true; //  success
-    } else {
-      fileDiv.querySelector(".filename").textContent = "File upload failed";
-      fileDiv.querySelector(".progress-inner").style.background = 'red';
-
-      console.error('File upload failed:', data.message);
-      return false; // failed
-    }
-  } catch (error) {
-    fileDiv.querySelector(".filename").textContent = "Client Error";
-    fileDiv.querySelector(".progress-inner").style.background = 'red';
-
-    console.error('Error uploading file:', error);
-    return false; //  failed
-  }
+    xhr.send(formData);
+  });
 }
 
 
@@ -301,6 +333,7 @@ shareBtn.addEventListener("click", () => {
           displayCode(data.code);
           shareBtn.textContent = "Code is valid for 10 mins";
           textArea.value = '';
+          window.saveToHistory('share-text', 'Shared text snippet', data.code);
         } else {
           shareBtn.textContent = "Error creating share";
           setTimeout(() => {

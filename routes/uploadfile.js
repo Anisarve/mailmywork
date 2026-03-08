@@ -7,15 +7,15 @@ const path = require('path');
 const { EmailFilestorage } = require('../utils/storage');
 const upload = multer({ storage: EmailFilestorage });
 
-const { sendFilesBrevo } = require('../utils/brevo_mail_service');
+const { sendFiles } = require('../utils/gmail_nodemailer');
 const fs = require('fs');
 const { deleteFromSystem } = require('../utils/deletefile');
 
 router.post('/', upload.single('files'), (req, res) => {
-    if(!req.file) {
+    if (!req.file) {
         return res.status(400).json({ status: false, message: 'No files uploaded' });
     }
-    res.status(200).json({ status:true, message: 'Files uploaded successfully', filename : req.file.originalname});
+    res.status(200).json({ status: true, message: 'Files uploaded successfully', filename: req.file.originalname });
 });
 
 router.post('/finalise', async (req, res) => {
@@ -26,13 +26,13 @@ router.post('/finalise', async (req, res) => {
 
     try {
         // Send email with files first
-        await sendFilesBrevo(email, subject, "", files);
+        await sendFiles(email, subject, files);
 
         // Respond immediately to client
         res.status(200).json({ status: true, message: 'Files sent successfully' });
 
         // Then delete files asynchronously
-        await Promise.all(files.map(file => 
+        await Promise.all(files.map(file =>
             deleteFromSystem(file).then().catch(err => console.error(err))
         ));
 
@@ -50,7 +50,7 @@ router.post('/remove', (req, res) => {
         return res.status(400).json({ status: false, message: 'Filename is required' });
     }
     const filePath = path.join(__dirname, '../uploads', filename);
-    
+
     fs.unlink(filePath, (err) => {
         if (err) {
             console.error('Error removing file:', err);

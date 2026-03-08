@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const {sendTextBrevo} = require('../utils/brevo_mail_service');
+const { sendText } = require('../utils/gmail_nodemailer');
 
-router.post('/send', (req, res)=>{
+router.post('/send', (req, res) => {
     const { email, subject, message } = req.body;
     if (!email || !message) {
         return res.status(400).json({ status: false, message: 'Email and message are required' });
     }
-    sendTextBrevo(email, subject, message)
+    sendText(email, subject, message)
         .then(() => {
             res.status(200).json({ status: true, message: 'Text sent successfully' });
         })
