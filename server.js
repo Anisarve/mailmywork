@@ -27,6 +27,12 @@ app.use(session({
 }))
 
 app.use(compression()); // Gzip all responses
+
+// IMPORTANT: Webhook route needs raw body, so we add it BEFORE json/urlencoded middleware
+const donationController = require('./components/donationController');
+app.post('/api/donate/webhook', express.raw({ type: 'application/json' }), donationController.handleWebhook);
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -42,6 +48,7 @@ const shareRoute = require('./routes/share');
 const receiveRoute = require('./routes/receive');
 const feedbackRoute = require('./routes/feedback');
 const queryRoute = require('./routes/query');
+const donatePagesRoute = require('./routes/donatePages');
 
 app.use('/upload', uploadRoutes);
 app.use('/textmail', textmailRoutes);
@@ -49,6 +56,11 @@ app.use('/share', shareRoute);
 app.use('/receive', receiveRoute);
 app.use('/feedback', feedbackRoute);
 app.use('/api/query', queryRoute);
+
+// Donation routes
+const donationRoutes = require('./routes/donation');
+app.use('/api/donate', donationRoutes);
+app.use('/donate', donatePagesRoute);
 
 // Secure TURN Credential Proxy (Metered.ca)
 // Fetches time-limited TURN tokens so the Secret Key is never sent to the browser.
