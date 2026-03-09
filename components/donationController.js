@@ -49,27 +49,28 @@ exports.createDonationSession = async (req, res) => {
         await donation.save();
 
         // Create Dodo Payments checkout session
-        const dodoResponse = await fetch('https://live.dodopayments.com/v1/payments', {
+        const dodoResponse = await fetch('https://live.dodopayments.com/checkout/sessions', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${DODO_API_KEY}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                amount: Math.round(amount * 100), // Convert to paise
+                amount: Math.round(amount * 100),
                 currency: 'INR',
                 customer_email: donorEmail,
                 customer_name: donorName,
                 description: `Donation to MailMyWork.io - ${donation._id}`,
-                metadata: {
-                    donation_id: donation._id.toString(),
-                    type: 'donation'
-                },
+                metadata: { donation_id: donation._id.toString(), type: 'donation' },
                 success_url: `${BASE_URL}/donate/success?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${BASE_URL}/donate?cancelled=true`,
                 webhook_url: `${BASE_URL}/api/donate/webhook`
             })
         });
+
+
+
+
 
         // Robust error handling for non-JSON or error responses
         const responseText = await dodoResponse.text();
