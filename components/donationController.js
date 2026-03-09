@@ -12,6 +12,14 @@ const BASE_URL = process.env.BASE_URL || 'https://mailmywork.onrender.com';
  * POST /api/donate/create-session
  */
 exports.createDonationSession = async (req, res) => {
+    if (!DODO_API_KEY) {
+        console.error('CRITICAL: DODO_SECRET_KEY is not defined in environment variables!');
+        return res.status(500).json({
+            success: false,
+            error: 'Server configuration error: Payment provider not configured.'
+        });
+    }
+
     try {
         const { amount, donorEmail, donorName } = req.body;
 

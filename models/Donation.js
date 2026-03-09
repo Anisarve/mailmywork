@@ -72,7 +72,6 @@ const donationSchema = new mongoose.Schema({
 // Index for faster queries
 donationSchema.index({ status: 1, createdAt: -1 });
 donationSchema.index({ donorEmail: 1 });
-donationSchema.index({ dodoPaymentId: 1 });
 
 // Virtual for formatted amount
 donationSchema.virtual('formattedAmount').get(function () {
