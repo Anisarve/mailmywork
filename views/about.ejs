@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | MailMyWork.io</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-95YQNPYWYM"></script>
+  <script src="/javascripts/google_analytics.js"></script>
+  <link rel="stylesheet" href="/stylesheets/main.css" />
+  <link rel="stylesheet" href="/stylesheets/navbar.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <style>
+    :root {
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --accent-cyan: #00f0ff;
+      --accent-blue: #1c55d0;
+    }
+
+    .about-container {
+      max-width: 900px;
+      margin: 80px auto;
+      padding: 40px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .about-hero {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .about-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .about-hero p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      color: var(--accent-cyan);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent-cyan), transparent);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .info-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--glass-border);
+      padding: 30px;
+      border-radius: 20px;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .info-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .info-card h3 {
+      color: #fff;
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+    }
+
+    .info-card p {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.7;
+    }
+
+    .features-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .feature-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .feature-label {
+      font-weight: 700;
+      color: var(--accent-cyan);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .feature-value {
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .wroomie-link {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 15px 35px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      color: #fff;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(0, 240, 255, 0.2);
+    }
+
+    .wroomie-link:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 30px rgba(0, 240, 255, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .about-hero h1 {
+        font-size: 2.5rem;
+      }
+      .about-container {
+        margin: 40px 20px;
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SVG Gradient Definition for Logo -->
+  <svg style="position: absolute; width: 0; height: 0;">
+    <defs>
+      <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1c55d0;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#00f0ff;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none"
+            stroke="url(#logoGradient)" stroke-width="2" />
+          <path d="M22 6l-10 7L2 6" fill="none" stroke="url(#logoGradient)" stroke-width="2" />
+        </svg>
+        MailMyWork.io
+      </div>
+      <ul class="nav-links">
+        <li><a href="/mail">Mail Me</a></li>
+        <li><a href="/">Share Files</a></li>
+        <li><a href="/feedback">Feedback</a></li>
+        <li><a href="/about" class="active">About</a></li>
+      </ul>
+      <div class="menu-toggle" id="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <main class="about-container">
+    <div class="about-hero">
+      <h1>About Us</h1>
+      <p>Simplifying digital workflows and connecting people with their ideal living spaces.</p>
+    </div>
+
+    <section>
+      <h2 class="section-title">Our Ecosystem</h2>
+      <div class="content-grid">
+        <div class="info-card">
+          <h3>MailMyWork.io</h3>
+          <p>MailMyWork is a cutting-edge productivity tool designed for the modern professional, developer, and student. It eliminates the friction of traditional communication by providing a lightning-fast, secure way to transfer snippets, files, and thoughts instantly.</p>
+          
+          <div class="features-list">
+            <div class="feature-item">
+              <span class="feature-label">Instant Self-Mail</span>
+              <span class="feature-value">Send notes to your inbox in seconds without logging in.</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-label">PWA Ready</span>
+              <span class="feature-value">Native OS share integration for a seamless mobile experience.</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-label">Secure Sharing</span>
+              <span class="feature-value">Peer-to-peer file transfer with unique session codes.</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-label">Zero Friction</span>
+              <span class="feature-value">No accounts, no ads, no trackers. Just pure utility.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card" id="wroomie-section">
+          <h3>Wroomie.in (RoomieConnect)</h3>
+          <p>Founded in 2026, <strong>Wroomie.in</strong> is a Mumbai-based platform that specializes in roommate matching and verified rental listings. It provides a user-friendly interface to search for rooms, PGs, and hostels using maps, filters, and verified listings to ensure a secure, brokerage-free experience.</p>
+          
+          <div class="features-list">
+            <div class="feature-item">
+              <span class="feature-label">Target Audience</span>
+              <span class="feature-value">Students & Professionals</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-label">Verified Listings</span>
+              <span class="feature-value">Focus on Trust & Safety</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-label">Functionality</span>
+              <span class="feature-value">Map-based Search & Matching</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-label">Company Info</span>
+              <span class="feature-value">Mumbai, Maharashtra</span>
+            </div>
+          </div>
+
+          <p style="margin-top: 20px;">The platform is designed to make finding a roommate and a new home a seamless, "stress-free" experience.</p>
+          
+          <a href="https://wroomie.in" target="_blank" class="wroomie-link">Visit Wroomie.in</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="/javascripts/navbar.js"></script>
+  <script>
+    gsap.from(".about-container", { opacity: 0, y: 30, duration: 1, ease: "power3.out" });
+    gsap.from(".info-card", { 
+      opacity: 0, 
+      y: 20, 
+      duration: 0.8, 
+      stagger: 0.2, 
+      ease: "power3.out",
+      delay: 0.5 
+    });
+  </script>
+</body>
+
+</html>

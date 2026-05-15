@@ -85,6 +85,7 @@ app.get('/', (req, res) => { res.render("share"); });
 app.get('/mail', (req, res) => { res.render("main"); });
 app.get('/share', (req, res) => { res.redirect(301, '/'); });
 app.get('/feedback', (req, res) => { res.render("feedback"); });
+app.get('/about', (req, res) => { res.render("about"); });
 
 server.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
