@@ -257,7 +257,7 @@ function displayFile(filename) {
   fileDiv.className = "file";
   fileDiv.innerHTML = `
         <div class="file-info">
-          <p class="filename">${filename.slice(10)}</p>
+          <p class="filename">${filename}</p>
           <i class="fa-solid fa-circle-xmark remove-icon" onclick="removeFile(this)"></i>
         </div>
         <div class="progress-outer">

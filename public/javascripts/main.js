@@ -102,14 +102,14 @@ async function handleFiles(files) {
       type: originalFile.type,
       lastModified: originalFile.lastModified
     });
-    const success = await uploadFile(renamedFile);
+    const success = await uploadFile(renamedFile, originalFile.name);
     if (success) {
       allFiles.push(renamedFile.name);
     }
   }
 }
 
-async function uploadFile(file) {
+async function uploadFile(file, displayName) {
   const maxSize = 200 * 1024 * 1024; // 200MB in bytes
   if (file.size > maxSize) {
     alert(`⚠️ "${file.name}" is larger than 200 MB. Please upload files under 200 MB.`);
@@ -117,7 +117,7 @@ async function uploadFile(file) {
   }
   const formData = new FormData();
   formData.append('files', file);
-  let fileDiv = displayFile(file.name); // Display the file in the list
+  let fileDiv = displayFile(displayName || file.name); // Display the file in the list
 
   try {
     const response = await fetch('/upload', {
@@ -151,7 +151,7 @@ function displayFile(filename) {
   fileDiv.className = "file";
   fileDiv.innerHTML = `
         <div class="file-info">
-          <p class="filename">${filename.slice(10)}</p>
+          <p class="filename">${filename}</p>
           <i class="fa-solid fa-circle-xmark remove-icon" onclick="removeFile(this)"></i>
         </div>
         <div class="progress-outer">
