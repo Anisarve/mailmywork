@@ -95,52 +95,54 @@ function handleFile() {
 
 
 // Handle and display files
-function handleFiles(files) {
+async function handleFiles(files) {
   for (let i = 0; i < files.length; i++) {
     const originalFile = files[i];
     const renamedFile = new File([originalFile], uniqueId + originalFile.name, {
       type: originalFile.type,
       lastModified: originalFile.lastModified
     });
-    if (uploadFile(renamedFile)) {
+    const success = await uploadFile(renamedFile);
+    if (success) {
       allFiles.push(renamedFile.name);
     }
   }
 }
 
-function uploadFile(file) {
-  const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+async function uploadFile(file) {
+  const maxSize = 200 * 1024 * 1024; // 200MB in bytes
   if (file.size > maxSize) {
-    alert(`⚠️ "${file.name.substring(10)}" is larger than 10 MB. We are not supporting files above 10 MB for now due to some limitations. We are working on it. Stay happy 😊`);
+    alert(`⚠️ "${file.name}" is larger than 200 MB. Please upload files under 200 MB.`);
     return false;
   }
   const formData = new FormData();
   formData.append('files', file);
   let fileDiv = displayFile(file.name); // Display the file in the list
-  fetch('/upload', {
-    method: 'POST',
-    body: formData
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.status) {
-        fileDiv.id = data.fileUrl;
-        fileDiv.querySelector(".progress-inner").classList.add('uploaded');
-        allFiles.push(data.filename);
-        return true; // Indicate successful upload
-      } else {
-        fileDiv.querySelector(".filename").textContent = "File upload failed";
-        fileDiv.querySelector(".progress-inner").style.background = 'red';
-        console.error('File upload failed:', data.message);
-        return false; // Indicate failed upload
-      }
-    })
-    .catch(error => {
-      fileDiv.querySelector(".filename").textContent = "Client Error";
-      fileDiv.querySelector(".progress-inner").style.background = 'red';
-      console.error('Error uploading file:', error);
-      return false; // Indicate failed upload
+
+  try {
+    const response = await fetch('/upload', {
+      method: 'POST',
+      body: formData
     });
+    const data = await response.json();
+
+    if (data.status) {
+      fileDiv.id = data.fileUrl;
+      fileDiv.querySelector(".progress-inner").classList.add('uploaded');
+      // allFiles.push(data.filename); // Already pushed in handleFiles loop
+      return true;
+    } else {
+      fileDiv.querySelector(".filename").textContent = "File upload failed";
+      fileDiv.querySelector(".progress-inner").style.background = 'red';
+      console.error('File upload failed:', data.message);
+      return false;
+    }
+  } catch (error) {
+    fileDiv.querySelector(".filename").textContent = "Client Error";
+    fileDiv.querySelector(".progress-inner").style.background = 'red';
+    console.error('Error uploading file:', error);
+    return false;
+  }
 }
 
 
@@ -225,7 +227,6 @@ sendBtn.addEventListener("click", () => {
     }).then(response => response.json())
       .then(data => {
         if (data.status) {
-          window.saveToHistory('self-mail', `Sent text to ${email.value.trim()}`);
           sendBtn.textContent = "Text sent successfully!";
           subject.value = '';
           textArea.value = '';
@@ -279,7 +280,6 @@ sendBtn.addEventListener("click", () => {
     }).then(response => response.json())
       .then(data => {
         if (data.status) {
-          window.saveToHistory('self-mail', `Sent ${allFiles.length} file(s) to ${email.value.trim()}`);
           sendBtn.textContent = "Files sent successfully!";
           subject.value = '';
           setTimeout(() => {

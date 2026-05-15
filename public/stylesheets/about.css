@@ -1,8 +1,0 @@
-/* About Page Specific Styles */
-.container p {
-  color: var(--text-muted);
-}
-
-.container strong {
-  color: var(--accent-cyan);
-}

@@ -28,13 +28,9 @@ app.use(session({
 
 app.use(compression()); // Gzip all responses
 
-// IMPORTANT: Webhook route needs raw body, so we add it BEFORE json/urlencoded middleware
-const donationController = require('./components/donationController');
-app.post('/api/donate/webhook', express.raw({ type: 'application/json' }), donationController.handleWebhook);
 
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '1gb' }));
+app.use(express.urlencoded({ extended: true, limit: '1gb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.set("view engine", "ejs");
@@ -48,7 +44,6 @@ const shareRoute = require('./routes/share');
 const receiveRoute = require('./routes/receive');
 const feedbackRoute = require('./routes/feedback');
 const queryRoute = require('./routes/query');
-const donatePagesRoute = require('./routes/donatePages');
 
 app.use('/upload', uploadRoutes);
 app.use('/textmail', textmailRoutes);
@@ -56,11 +51,6 @@ app.use('/share', shareRoute);
 app.use('/receive', receiveRoute);
 app.use('/feedback', feedbackRoute);
 app.use('/api/query', queryRoute);
-
-// Donation routes
-const donationRoutes = require('./routes/donation');
-app.use('/api/donate', donationRoutes);
-app.use('/donate', donatePagesRoute);
 
 // Secure TURN Credential Proxy (Metered.ca)
 // Fetches time-limited TURN tokens so the Secret Key is never sent to the browser.
@@ -91,12 +81,10 @@ app.post('/share-target', uploadFallback.any(), (req, res) => {
   res.redirect(303, '/?shared=fallback');
 });
 
-app.get('/', (req, res) => { res.render("main"); });
-app.get('/share', (req, res) => { res.render("share"); });
+app.get('/', (req, res) => { res.render("share"); });
+app.get('/mail', (req, res) => { res.render("main"); });
+app.get('/share', (req, res) => { res.redirect(301, '/'); });
 app.get('/feedback', (req, res) => { res.render("feedback"); });
-app.get('/about', (req, res) => { res.render("about"); });
-app.get('/help', (req, res) => { res.render("help"); });
-app.get('/large-file', (req, res) => { res.render("largefile"); });
 
 server.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);

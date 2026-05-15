@@ -155,8 +155,6 @@ async function handleFile() {
 
 // Handle and display files CONCURRENTLY
 async function handleFiles(files) {
-  const uploadPromises = [];
-
   for (let i = 0; i < files.length; i++) {
     const originalFile = files[i];
     const renamedFile = new File([originalFile], originalFile.name, {
@@ -164,24 +162,18 @@ async function handleFiles(files) {
       lastModified: originalFile.lastModified
     });
 
-    // Start upload immediately and push the promise to array
-    uploadPromises.push(uploadFile(renamedFile));
-  }
-
-  // Wait for ALL concurrent uploads to settle
-  await Promise.allSettled(uploadPromises);
-
-  if (files.length > 0 && uniqueCode) {
-    window.saveToHistory('share-file', `Shared ${files.length} file(s)`, uniqueCode);
+    // Wait for each upload to complete before starting the next one
+    // to ensure they all share the same uniqueCode
+    await uploadFile(renamedFile);
   }
 }
 
 // Upload File using XMLHttpRequest to track EXACT progress
 function uploadFile(file) {
   return new Promise((resolve) => {
-    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    const maxSize = 200 * 1024 * 1024; // 200MB in bytes
     if (file.size > maxSize) {
-      alert(`⚠️ "${file.name.substring(10)}" is larger than 10 MB. We are not supporting files above 10 MB for now due to some limitations. We are working on it. Stay happy 😊`);
+      alert(`⚠️ "${file.name}" is larger than 200 MB. Please upload files under 200 MB.`);
       resolve(false);
       return;
     }
@@ -333,7 +325,6 @@ shareBtn.addEventListener("click", () => {
           displayCode(data.code);
           shareBtn.textContent = "Code is valid for 10 mins";
           textArea.value = '';
-          window.saveToHistory('share-text', 'Shared text snippet', data.code);
         } else {
           shareBtn.textContent = "Error creating share";
           setTimeout(() => {
