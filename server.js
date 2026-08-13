@@ -29,8 +29,8 @@ app.use(session({
 app.use(compression()); // Gzip all responses
 
 
-app.use(express.json({ limit: '1gb' }));
-app.use(express.urlencoded({ extended: true, limit: '1gb' }));
+app.use(express.json({ limit: '400mb' }));
+app.use(express.urlencoded({ extended: true, limit: '400mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.set("view engine", "ejs");

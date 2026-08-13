@@ -64,8 +64,8 @@ function displayCode(cd) {
   // Animate code container entrance dynamically
   const codeContainer = document.querySelector(".code-container");
   if (typeof gsap !== "undefined" && codeContainer) {
-    gsap.fromTo(codeContainer, 
-      { opacity: 0, scale: 0.8, y: 30 }, 
+    gsap.fromTo(codeContainer,
+      { opacity: 0, scale: 0.8, y: 30 },
       { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(1.7)" }
     );
   }
@@ -221,9 +221,9 @@ function randomFilename(length = 20) {
 // Upload File using sequential 5MB chunks and tracking progress
 function uploadFile(file) {
   return new Promise((resolve) => {
-    const maxSize = 1024 * 1024 * 1024; // 1GB in bytes
+    const maxSize = 400 * 1024 * 1024; // 400MB in bytes
     if (file.size > maxSize) {
-      alert(`⚠️ "${file.name}" is larger than 1 GB. Please upload files under 1 GB.`);
+      alert(`⚠️ "${file.name}" is larger than 400 MB. Please upload files under 400 MB.`);
       resolve(false);
       return;
     }
@@ -531,22 +531,22 @@ const submitCode = () => {
                 </svg>Copy Text
               </button>
             `;
-            
+
             // GSAP Entrance for Text Board Wrapper
             if (typeof gsap !== "undefined") {
-              gsap.fromTo(".collapsible-text-wrapper", 
-                { opacity: 0, y: 50, scaleY: 0.8, transformOrigin: "top" }, 
+              gsap.fromTo(".collapsible-text-wrapper",
+                { opacity: 0, y: 50, scaleY: 0.8, transformOrigin: "top" },
                 { opacity: 1, y: 0, scaleY: 1, duration: 0.6, ease: "back.out(1.5)" }
               );
-              gsap.fromTo("#copy-text-btn", 
-                { opacity: 0, y: 20 }, 
+              gsap.fromTo("#copy-text-btn",
+                { opacity: 0, y: 20 },
                 { opacity: 1, y: 0, duration: 0.4, delay: 0.3, ease: "power2.out" }
               );
             } else {
               document.querySelector(".collapsible-text-wrapper").style.opacity = "1";
               document.getElementById("copy-text-btn").style.opacity = "1";
             }
-            
+
             const heightBtn = document.getElementById("toggle-text-height-btn");
             const textBlock = document.getElementById("received-data");
             if (heightBtn && textBlock) {
@@ -572,7 +572,7 @@ const submitCode = () => {
                 }
               });
             }
-            
+
             const copyBtn = document.getElementById("copy-text-btn");
             if (copyBtn) {
               copyBtn.addEventListener("click", () => {
@@ -609,7 +609,7 @@ const submitCode = () => {
                   </button>
                 </div>
               `);
-              
+
               if (typeof gsap !== "undefined") {
                 gsap.fromTo("#download-all-actions",
                   { opacity: 0, y: -20 },
@@ -618,7 +618,7 @@ const submitCode = () => {
               } else {
                 document.getElementById("download-all-actions").style.opacity = "1";
               }
-              
+
               // Download All individual triggers
               document.getElementById("download-all-btn").addEventListener("click", () => {
                 data.content.forEach((file, index) => {
@@ -629,7 +629,7 @@ const submitCode = () => {
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    
+
                     // Mark file card as downloaded
                     const fileRow = document.getElementById(`file-${index + 1}`);
                     if (fileRow) {
@@ -647,7 +647,7 @@ const submitCode = () => {
                     alert("ZIP library is not loaded. Please try again in a moment.");
                     return;
                   }
-                  
+
                   const originalContent = zipBtn.innerHTML;
                   zipBtn.innerHTML = `
                     <svg class="spinner" viewBox="0 0 24 24" style="width:18px; height:18px; fill:currentColor; margin-right:8px; vertical-align:middle;">
@@ -703,7 +703,7 @@ const submitCode = () => {
                   <i class="fa-solid fa-cloud-arrow-down"></i>
                 </div>
               `);
-              
+
               const currentFileSeq = fileSeq;
               const fileEl = document.getElementById(`file-${currentFileSeq}`);
               fileEl.addEventListener("click", function (event) {
@@ -722,16 +722,16 @@ const submitCode = () => {
 
             // GSAP 3D Drop-Down Sequential Bounce
             if (typeof gsap !== "undefined") {
-              gsap.fromTo(".received-file", 
-                { opacity: 0, y: -150, scale: 0.9, rotationX: -25 }, 
-                { 
-                  opacity: 1, 
-                  y: 0, 
+              gsap.fromTo(".received-file",
+                { opacity: 0, y: -150, scale: 0.9, rotationX: -25 },
+                {
+                  opacity: 1,
+                  y: 0,
                   scale: 1,
                   rotationX: 0,
-                  duration: 0.9, 
-                  stagger: 0.15, 
-                  ease: "bounce.out" 
+                  duration: 0.9,
+                  stagger: 0.15,
+                  ease: "bounce.out"
                 }
               );
             } else {
