@@ -38,77 +38,7 @@ const globalHeader = `
   </div>
 `;
 
-// Function to send text content
-const sendText = (email, sub, message) => {
-  return transporter.sendMail({
-    to: email,
-    subject: sub || "You've sent yourself something via MailMyWork.io!",
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>${emailHead}</head>
-      <body>
-        <div class="container">
-          ${globalHeader}
-          <h2><span class="gradient-text">Encrypted Note</span> Received</h2>
-          <p style="margin-bottom: 20px;">You successfully mailed yourself this text snippet from MailMyWork.io:</p>
-          <div class="accent-box" id="copy-target">${message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
-          <div style="text-align: center;">
-            <a href="https://mailmywork.onrender.com/" class="btn">Return to App &raquo;</a>
-          </div>
-          <div class="footer">Transmitted securely by MailMyWork.io &copy; ${new Date().getFullYear()}</div>
-        </div>
-        <script>
-          function copyToClipboard() {
-            var content = document.getElementById("copy-target").innerText;
-            navigator.clipboard.writeText(content).then(function() {
-              alert("Text copied to clipboard!");
-            });
-          }
-        </script>
-      </body>
-      </html>
-    `
-  });
-};
 
-
-// Function to send files
-const sendFiles = (email, sub, files) => {
-  const attachments = files.map(file => ({
-    filename: file,
-    path: path.join(__dirname, '../uploads', file)
-  }));
-
-  // Return the promise so the caller can await it
-  return transporter.sendMail({
-    to: email,
-    subject: sub || "You shared some files with yourself via MailMyWork.io!",
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>${emailHead}</head>
-      <body>
-        <div class="container">
-          ${globalHeader}
-          <h2><span class="gradient-text">File Transfer</span> Complete</h2>
-          <p style="margin-bottom: 20px;">You successfully mailed yourself <strong>${files.length} file(s)</strong> from MailMyWork.io.</p>
-          <div class="accent-box" style="border-left-color: #00f0ff;">
-            <strong>Attached Files:</strong><br><br>
-            ${files.map(f => `• ${f.replace(/.{10}/, '')}`).join('<br>')}
-          </div>
-          <p style="margin-bottom: 30px;">Download them directly from this email's attachments. Files on our server will self-destruct shortly to protect your privacy.</p>
-          <div style="text-align: center;">
-            <a href="https://mailmywork.onrender.com/" class="btn">Return to App &raquo;</a>
-          </div>
-          <div class="footer">Transmitted securely by MailMyWork.io &copy; ${new Date().getFullYear()}</div>
-        </div>
-      </body>
-      </html>
-    `,
-    attachments
-  });
-};
 
 // Function to send feedback email
 const sendFeedback = (userName, userEmail, feedback) => {
@@ -166,4 +96,4 @@ const sendFilesAPI = (email, sub, filename) => {
   });
 };
 
-module.exports = { sendText, sendFiles, sendFeedback, sendTextAPI, sendFilesAPI };
+module.exports = { sendFeedback, sendTextAPI, sendFilesAPI };

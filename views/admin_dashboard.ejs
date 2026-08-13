@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - MailMyWork</title>
+  <link rel="stylesheet" href="/stylesheets/main.css">
+  <link rel="stylesheet" href="/stylesheets/navbar.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* Reset body alignment to normal scrollable list instead of centering */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 100px 20px 40px 20px;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .admin-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      opacity: 0;
+      /* Animated in by GSAP */
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 20px;
+    }
+
+    .admin-title {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+    }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .logout-btn:hover {
+      background: #ef4444;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0, 240, 255, 0.3);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+
+    .stat-card.files::before {
+      background: var(--accent-indigo);
+      box-shadow: 0 0 10px var(--accent-indigo);
+    }
+
+    .stat-card.texts::before {
+      background: #8b5cf6;
+      box-shadow: 0 0 10px #8b5cf6;
+    }
+
+    .stat-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 2.5rem;
+      color: #fff;
+    }
+
+    .stat-value.live {
+      color: var(--accent-cyan);
+      text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+    }
+
+    /* Dashboard Sections */
+    .dashboard-section {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard-section::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-indigo), var(--accent-cyan), transparent);
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      font-size: 1rem;
+      vertical-align: middle;
+      color: var(--text-main);
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .code-badge {
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      color: var(--accent-cyan);
+      font-family: 'Orbitron', sans-serif;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+    }
+
+    .expiry-date {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .action-btn {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+      background: #ef4444;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+    }
+
+    .download-link {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-weight: 600;
+      border-bottom: 1px dashed rgba(0, 240, 255, 0.3);
+    }
+
+    .download-link:hover {
+      color: var(--accent-indigo);
+      border-bottom-color: var(--accent-indigo);
+      text-shadow: 0 0 10px rgba(79, 70, 229, 0.3);
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 1.05rem;
+    }
+
+    .error-alert {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SVG Gradient Definition for Logo -->
+  <svg style="position: absolute; width: 0; height: 0;">
+    <defs>
+      <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1c55d0;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#00f0ff;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none"
+            stroke="url(#logoGradient)" stroke-width="2" />
+          <path d="M22 6l-10 7L2 6" fill="none" stroke="url(#logoGradient)" stroke-width="2" />
+        </svg>
+        MailMyWork.io
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Share Files</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+      <div class="menu-toggle" id="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <div class="admin-container">
+    <% if (error) { %>
+      <div class="error-alert">
+        Warning: Action failed! <%= error %>
+      </div>
+      <% } %>
+
+        <div class="admin-header">
+          <h1 class="admin-title">ADMIN PANEL</h1>
+          <a href="/admin/logout" class="logout-btn">Logout</a>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Live Visitors</span>
+            <span class="stat-value live">
+              <%= liveVisitors %>
+            </span>
+          </div>
+          <div class="stat-card files">
+            <span class="stat-label">Active Files</span>
+            <span class="stat-value">
+              <%= files.length %>
+            </span>
+          </div>
+          <div class="stat-card texts">
+            <span class="stat-label">Shared Text Blocks</span>
+            <span class="stat-value">
+              <%= texts.length %>
+            </span>
+          </div>
+        </div>
+
+        <!-- Shared Files Table Section -->
+        <div class="dashboard-section">
+          <h2 class="section-title">Shared Files</h2>
+          <div class="table-container">
+            <% if (files.length> 0) { %>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>File Name</th>
+                    <th>Uploaded File</th>
+                    <th>Expiry Date</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% files.forEach(file=> { %>
+                    <tr>
+                      <td><span class="code-badge">
+                          <%= file.code %>
+                        </span></td>
+                      <td>
+                        <%= file.filename %>
+                      </td>
+                      <td><a class="download-link" href="/share_uploads/<%= file.url %>"
+                          download="<%= file.filename %>">
+                          <%= file.url %>
+                        </a></td>
+                      <td><span class="expiry-date">
+                          <%= file.expiryDate.toLocaleString() %>
+                        </span></td>
+                      <td style="text-align: right;">
+                        <form action="/admin/delete-file/<%= file._id %>" method="POST" style="display: inline;"
+                          onsubmit="return confirm('Delete this file permanentely?');">
+                          <button type="submit" class="action-btn">Delete</button>
+                        </form>
+                      </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+              </table>
+              <% } else { %>
+                <div class="no-data">No active files found in database</div>
+                <% } %>
+          </div>
+        </div>
+
+        <!-- Shared Text Table Section -->
+        <div class="dashboard-section">
+          <h2 class="section-title">Shared Text Blocks</h2>
+          <div class="table-container">
+            <% if (texts.length> 0) { %>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Snippet Content</th>
+                    <th>Expiry Date</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% texts.forEach(text=> { %>
+                    <tr>
+                      <td><span class="code-badge">
+                          <%= text.code %>
+                        </span></td>
+                      <td style="font-family: 'Outfit', sans-serif;">
+                        <%= text.textContent.length> 60 ? text.textContent.substring(0, 60) + '...' : text.textContent
+                          %>
+                      </td>
+                      <td><span class="expiry-date">
+                          <%= text.expiryDate.toLocaleString() %>
+                        </span></td>
+                      <td style="text-align: right;">
+                        <form action="/admin/delete-text/<%= text._id %>" method="POST" style="display: inline;"
+                          onsubmit="return confirm('Delete this text block permanentely?');">
+                          <button type="submit" class="action-btn">Delete</button>
+                        </form>
+                      </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+              </table>
+              <% } else { %>
+                <div class="no-data">No active text blocks found in database</div>
+                <% } %>
+          </div>
+        </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="/javascripts/navbar.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Fade/slide in container
+      gsap.to(".admin-container", {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out"
+      });
+
+      // Stagger reveal stats cards
+      gsap.fromTo(".stat-card",
+        { opacity: 0, y: 30, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1, ease: "power2.out", delay: 0.1 }
+      );
+
+      // Stagger reveal dashboard sections
+      gsap.fromTo(".dashboard-section",
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out", delay: 0.3 }
+      );
+    });
+  </script>
+</body>
+
+</html>

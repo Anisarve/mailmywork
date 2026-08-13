@@ -1,6 +1,8 @@
 // socket.js
 const { Server } = require("socket.io");
 
+let ioInstance = null;
+
 function setupSocket(server) {
   const io = new Server(server, {
     cors: { origin: "*", methods: ["GET", "POST"] }
@@ -79,7 +81,12 @@ function setupSocket(server) {
     });
   });
 
+  ioInstance = io;
   return io;
 }
 
-module.exports = { setupSocket };
+function getIo() {
+  return ioInstance;
+}
+
+module.exports = { setupSocket, getIo };

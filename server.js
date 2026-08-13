@@ -23,7 +23,7 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true, maxAge: 60 * 60 * 24 }
+  cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 60 * 60 * 24 * 1000 }
 }))
 
 app.use(compression()); // Gzip all responses
@@ -38,19 +38,17 @@ app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 app.set('trust proxy', true);
 
-const uploadRoutes = require('./routes/uploadfile');
-const textmailRoutes = require('./routes/textmail');
 const shareRoute = require('./routes/share');
 const receiveRoute = require('./routes/receive');
-const feedbackRoute = require('./routes/feedback');
 const queryRoute = require('./routes/query');
+const adminRoute = require('./routes/admin');
+// const classesRoute = require('./routes/classes');
 
-app.use('/upload', uploadRoutes);
-app.use('/textmail', textmailRoutes);
 app.use('/share', shareRoute);
 app.use('/receive', receiveRoute);
-app.use('/feedback', feedbackRoute);
 app.use('/api/query', queryRoute);
+app.use('/admin', adminRoute);
+// app.use('/classes', classesRoute);
 
 // Secure TURN Credential Proxy (Metered.ca)
 // Fetches time-limited TURN tokens so the Secret Key is never sent to the browser.
@@ -82,9 +80,9 @@ app.post('/share-target', uploadFallback.any(), (req, res) => {
 });
 
 app.get('/', (req, res) => { res.render("share"); });
-app.get('/mail', (req, res) => { res.render("main"); });
+app.get('/mail', (req, res) => { res.redirect(301, '/'); });
 app.get('/share', (req, res) => { res.redirect(301, '/'); });
-app.get('/feedback', (req, res) => { res.render("feedback"); });
+app.get('/contact', (req, res) => { res.render("contact"); });
 app.get('/about', (req, res) => { res.render("about"); });
 
 server.listen(PORT, () => {

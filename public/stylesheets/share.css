@@ -65,7 +65,10 @@
 }
 
 .received-container .received-textContent {
-  height: 250px;
+  height: 100px;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .received-container .received-file {
@@ -87,4 +90,190 @@
 
 .received-container .received-file i {
   color: #192b43;
+}
+
+/* QR Code Section Styling */
+.qr-toggle-btn {
+  display: none;
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--accent-cyan);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.qr-toggle-btn:hover {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-1px);
+}
+
+.qr-toggle-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.qr-box {
+  display: none;
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+#qrcode {
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 8px;
+  display: inline-block;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease;
+}
+
+#qrcode:hover {
+  transform: scale(1.03);
+}
+
+.qr-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+/* Copy Text & Download All Buttons */
+.copy-btn, .download-all-btn {
+  background: rgba(79, 70, 229, 0.15);
+  border: 1px solid rgba(79, 70, 229, 0.4);
+  color: var(--text-main);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.copy-btn:hover, .download-all-btn:hover {
+  background: rgba(0, 240, 255, 0.1);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-1px);
+}
+
+/* 3D Perspective for received result drops */
+#received-result {
+  perspective: 1000px;
+}
+
+/* Neon Glow Pulse Animation for the main container */
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0px rgba(0, 240, 255, 0);
+  }
+  30% {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 
+                0 0 25px rgba(0, 240, 255, 0.7), 
+                0 0 50px rgba(79, 70, 229, 0.5);
+  }
+  100% {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0px rgba(0, 240, 255, 0);
+  }
+}
+
+.glow-pulse-active {
+  animation: glowPulse 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Collapsible text area height toggle button */
+.toggle-height-btn {
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-top: none;
+  color: var(--text-muted);
+  width: 100%;
+  padding: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  margin-top: -1px;
+}
+
+.toggle-height-btn:hover {
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--accent-cyan);
+  border-color: rgba(0, 240, 255, 0.3);
+}
+
+.toggle-height-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  transition: transform 0.3s ease;
+}
+
+.toggle-height-btn.expanded svg {
+  transform: rotate(180deg);
+}
+
+/* Downloaded file visual feedback style */
+.received-container .received-file {
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.received-container .received-file.downloaded {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+.received-container .received-file.downloaded i {
+  color: #10b981 !important;
+}
+
+/* Rotating zipping loading spinner keyframes */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1.2s linear infinite;
 }

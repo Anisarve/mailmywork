@@ -1,7 +1,9 @@
 // controllers/cleanupController.js
 const File = require("../models/fileModel");
 const Text = require("../models/textModel");
+const Assignment = require("../models/assignmentModel");
 const { deleteFileById } = require('./file.js');
+const { deleteAssignmentById } = require('./assignment.js');
 
 async function cleanupExpiredDocs() {
   try {
@@ -25,6 +27,14 @@ async function cleanupExpiredDocs() {
       if (oldestText && oldestText.expiryDate && now > oldestText.expiryDate) {
         await Text.findByIdAndDelete(oldestText._id);
         deletedSomething = true; // deleted one → check again
+        continue;
+      }
+
+      // --- Oldest Assignment ---
+      const oldestAssignment = await Assignment.findOne().sort({ createdAt: 1 });
+      if (oldestAssignment && oldestAssignment.expiryDate && now > oldestAssignment.expiryDate) {
+        await deleteAssignmentById(oldestAssignment._id);
+        deletedSomething = true;
         continue;
       }
     }

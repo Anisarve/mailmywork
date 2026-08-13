@@ -35,9 +35,8 @@
         MailMyWork.io
       </div>
       <ul class="nav-links">
-        <li><a href="/mail">Mail Me</a></li>
         <li><a href="/" class="active">Share Files</a></li>
-        <li><a href="/feedback">Feedback</a></li>
+        <li><a href="/contact">Contact</a></li>
         <li><a href="/about">About</a></li>
       </ul>
       <div class="menu-toggle" id="menu-toggle">
@@ -81,8 +80,22 @@
 
     <div id="uploadList">
     </div>
-    <div class="code" id="code"
-      style="text-align:center; font-family:'Rajdhani', sans-serif; font-size:1.5rem; letter-spacing:2px; margin-top:1rem; color:var(--accent-cyan);">
+    <div class="code-container" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+      <div class="code" id="code"
+        style="text-align:center; font-family:'Rajdhani', sans-serif; font-size:1.5rem; letter-spacing:2px; margin-top:1rem; color:var(--accent-cyan);">
+      </div>
+
+      <button id="qr-btn" class="qr-toggle-btn">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm13-2h3v2h-3zm-3 3h3v3h-3zm3 3h3v-3h-3zm-3-3h-3v-3h3zm3-3h-3v3h3zm-6 6h3v-3h-3zm6 0h-3v3h3z"/>
+        </svg>
+        Show QR Code
+      </button>
+
+      <div id="qr-container" class="qr-box">
+        <div id="qrcode"></div>
+        <p class="qr-text">Scan to receive on another device</p>
+      </div>
     </div>
 
     <!-- Submit -->
@@ -90,6 +103,8 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="/javascripts/share.js"></script>
   <script src="/javascripts/navbar.js"></script>
   <script src="/javascripts/pwa-share.js"></script>

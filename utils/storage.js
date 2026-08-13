@@ -8,10 +8,7 @@ if (!fs.existsSync(shareUploads)) {
     fs.mkdirSync(shareUploads, { recursive: true });
 }
 
-const emailUploads = path.join(__dirname, '../uploads');
-if (!fs.existsSync(emailUploads)) {
-    fs.mkdirSync(emailUploads, { recursive: true });
-}
+
 
 // Function to generate 10 random alphanumeric characters
 function randomFilename(length = 10) {
@@ -59,15 +56,4 @@ const ShareFileStorage = multer.diskStorage({
     }
 });
 
-// Store file with original filename
-const EmailFilestorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads')); // Destination folder
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); // Keep original file name
-  }
-});
-
-
-module.exports = {EmailFilestorage, ShareFileStorage, ApiShareFileStorage};
+module.exports = {ShareFileStorage, ApiShareFileStorage};

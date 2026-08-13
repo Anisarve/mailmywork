@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - MailMyWork</title>
+  <link rel="stylesheet" href="/stylesheets/main.css">
+  <link rel="stylesheet" href="/stylesheets/navbar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Styling overrides for admin login card */
+    .login-title {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      margin-bottom: 30px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+    }
+    .form-group {
+      width: 100%;
+      margin-bottom: 25px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .error-msg {
+      width: 100%;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG Gradient Definition for Logo -->
+  <svg style="position: absolute; width: 0; height: 0;">
+    <defs>
+      <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1c55d0;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#00f0ff;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none"
+            stroke="url(#logoGradient)" stroke-width="2" />
+          <path d="M22 6l-10 7L2 6" fill="none" stroke="url(#logoGradient)" stroke-width="2" />
+        </svg>
+        MailMyWork.io
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Share Files</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+      <div class="menu-toggle" id="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container" style="max-width: 420px; margin: 8rem auto 2rem auto;">
+    <h1 class="login-title">ADMIN PORTAL</h1>
+    
+    <% if (error) { %>
+      <div class="error-msg">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <form action="/admin/login" method="POST" style="width: 100%;">
+      <div class="form-group">
+        <label for="password">Security Password</label>
+        <input type="password" id="password" name="password" class="email-input" style="margin-bottom: 0;" placeholder="••••••••••••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="submit-btn" style="margin-top: 10px;">Authenticate</button>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="/javascripts/navbar.js"></script>
+</body>
+</html>

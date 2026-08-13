@@ -1,7 +1,7 @@
 {
     "name": "MailMyWork.io",
     "short_name": "MailMyWork",
-    "description": "Instant self-mailing and lightning fast file sharing with a premium gaming aesthetic.",
+    "description": "Lightning fast file sharing with a premium gaming aesthetic.",
     "start_url": "/?source=pwa",
     "display": "standalone",
     "background_color": "#050507",

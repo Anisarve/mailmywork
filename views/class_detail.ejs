@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= cls.name %> | MailMyWork.io</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-95YQNPYWYM"></script>
+  <script src="/javascripts/google_analytics.js"></script>
+  <link rel="stylesheet" href="/stylesheets/main.css" />
+  <link rel="stylesheet" href="/stylesheets/navbar.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 25px;
+      align-self: flex-start;
+      transition: color 0.3s;
+    }
+
+    .back-link:hover {
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    }
+
+    /* Tabs Menu */
+    .class-tabs {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 5px;
+      width: 100%;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      padding: 10px 20px;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+    }
+
+    .tab-btn.active {
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
+      border-radius: 3px;
+    }
+
+    .tab-content {
+      display: none;
+      width: 100%;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-box {
+      width: 100%;
+      background: var(--bg-panel);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 35px 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-box::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-indigo), transparent);
+    }
+
+    /* Styled drop/file input zone */
+    .pdf-drop-zone {
+      border: 2px dashed rgba(0, 240, 255, 0.4);
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .pdf-drop-zone:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 240, 255, 0.05);
+      color: var(--accent-cyan);
+      box-shadow: var(--glow-cyan);
+    }
+
+    .pdf-drop-zone svg {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 10px;
+      fill: var(--text-muted);
+      transition: all 0.3s ease;
+    }
+
+    .pdf-drop-zone:hover svg {
+      fill: var(--accent-cyan);
+      transform: translateY(-3px);
+    }
+
+    .pdf-drop-zone input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .selected-file-name {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #fff;
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    /* Table styling for no-wrap assignment list */
+    .assignment-list-container {
+      width: 100%;
+      overflow-x: auto; /* Enable scroll if columns overflow on mobile rather than wrapping */
+      border-radius: 16px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .assignment-list-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-indigo), var(--accent-cyan), transparent);
+    }
+
+    .assignment-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      white-space: nowrap; /* Strictly disable text wrapping */
+    }
+
+    .assignment-table th {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .assignment-table td {
+      padding: 18px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      vertical-align: middle;
+      color: var(--text-main);
+    }
+
+    .assignment-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .assignment-table tr:hover td {
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .title-col {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .file-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ef4444;
+      flex-shrink: 0;
+    }
+
+    .file-icon svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .doc-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      max-width: 280px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .doc-filename {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 280px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: 2px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .student-col {
+      font-size: 0.95rem;
+      color: var(--accent-cyan);
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .student-none {
+      color: var(--text-muted);
+      font-style: italic;
+      font-weight: normal;
+    }
+
+    .time-col {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .expiry-tag {
+      color: #eab308;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+    }
+
+    .download-btn {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: var(--accent-cyan);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .download-btn:hover {
+      background: var(--accent-cyan);
+      color: #050507;
+      box-shadow: var(--glow-cyan);
+      border-color: var(--accent-cyan);
+      transform: scale(1.05);
+    }
+
+    .download-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 1.05rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SVG Gradient Definition for Logo -->
+  <svg style="position: absolute; width: 0; height: 0;">
+    <defs>
+      <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1c55d0;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#00f0ff;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none"
+            stroke="url(#logoGradient)" stroke-width="2" />
+          <path d="M22 6l-10 7L2 6" fill="none" stroke="url(#logoGradient)" stroke-width="2" />
+        </svg>
+        MailMyWork.io
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Share Files</a></li>
+        <li><a href="/classes" class="active">Classes</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+      <div class="menu-toggle" id="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Content -->
+  <div class="container" style="max-width: 960px; margin: 8rem auto 4rem auto; padding: 45px 35px; display: flex; flex-direction: column;">
+    <a href="/classes" class="back-link">&larr; Back to Classes</a>
+    
+    <h1 class="title" style="text-align: left; align-self: flex-start; margin-bottom: 0.5rem;"><%= cls.name %></h1>
+    <p style="text-align:left; line-height:1.6; margin-bottom: 2.5rem; color:var(--text-muted); font-family:'Outfit', sans-serif;">
+      Share PDF assignments or documents here. Files expire and delete automatically after 7 days.
+    </p>
+
+    <% if (error) { %>
+      <div class="error-alert" style="width:100%;">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <!-- Tabs Menu -->
+    <div class="class-tabs">
+      <button class="tab-btn active" id="uploadTabBtn">Upload Document</button>
+      <button class="tab-btn" id="docsTabBtn">Uploaded Documents (<%= assignments.length %>)</button>
+    </div>
+
+    <!-- Tab Content: Upload Document -->
+    <div class="tab-content active" id="uploadTabContent">
+      <div class="form-box">
+        <form action="/classes/<%= cls.code %>/upload" method="POST" enctype="multipart/form-data">
+          
+          <div class="pdf-drop-zone">
+            <svg viewBox="0 0 24 24">
+              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z" />
+            </svg>
+            <p style="font-family:'Rajdhani', sans-serif; font-size:1.1rem; font-weight:600; margin-bottom: 4px;">Drag & Drop or Click to Upload</p>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">PDF, Word, or TXT documents supported</span>
+            <input type="file" name="document" id="fileInput" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" required />
+            <div class="selected-file-name" id="fileNameDisplay"></div>
+          </div>
+
+          <div style="text-align: left; margin-bottom: 20px;">
+            <label style="font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 8px; display: block;">Document Title</label>
+            <input type="text" name="title" placeholder="e.g. Mathematics Chapter 3 Assignment" class="email-input" style="margin-bottom: 0;" required autocomplete="off" />
+          </div>
+
+          <div style="text-align: left; margin-bottom: 25px;">
+            <label style="font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 8px; display: block;">Student Name (Optional)</label>
+            <input type="text" name="studentName" placeholder="e.g. Anirudh Sarve" class="email-input" style="margin-bottom: 0;" autocomplete="off" />
+          </div>
+
+          <button type="submit" class="submit-btn" style="margin-top: 10px;">Upload to Class</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tab Content: Uploaded Documents -->
+    <div class="tab-content" id="docsTabContent">
+      <div class="assignment-list-container">
+        <% if (assignments.length > 0) { %>
+          <table class="assignment-table">
+            <thead>
+              <tr>
+                <th>Document Details</th>
+                <th>Student Name</th>
+                <th>Time of Upload</th>
+                <th>Expiry</th>
+                <th style="text-align: right; padding-right: 24px;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% assignments.forEach(asg => { %>
+                <% 
+                  // Calculate remaining days
+                  const daysLeft = Math.max(1, Math.ceil((asg.expiryDate - Date.now()) / (1000 * 60 * 60 * 24)));
+                  // Format upload time and date
+                  const uploadDate = new Date(asg.createdAt);
+                  const formattedTime = uploadDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' - ' + uploadDate.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                %>
+                <tr>
+                  <td>
+                    <div class="title-col">
+                      <div class="file-icon">
+                        <svg viewBox="0 0 24 24">
+                          <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div class="doc-title" title="<%= asg.title %>"><%= asg.title %></div>
+                        <div class="doc-filename" title="<%= asg.filename %>"><%= asg.filename %></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="student-col">
+                    <% if (asg.studentName) { %>
+                      <%= asg.studentName %>
+                    <% } else { %>
+                      <span class="student-none">-</span>
+                    <% } %>
+                  </td>
+                  <td class="time-col">
+                    <%= formattedTime %>
+                  </td>
+                  <td class="expiry-tag">
+                    Expires in <%= daysLeft %> day<%= daysLeft === 1 ? '' : 's' %>
+                  </td>
+                  <td style="text-align: right; padding-right: 24px;">
+                    <a href="/classes/download/<%= asg._id %>" class="download-btn" title="Download <%= asg.filename %>">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z" />
+                      </svg>
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } else { %>
+          <div class="no-data">
+            No documents uploaded in this class yet
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="/javascripts/navbar.js"></script>
+  <script>
+    // File input selection display
+    const fileInput = document.getElementById("fileInput");
+    const nameDisplay = document.getElementById("fileNameDisplay");
+
+    if (fileInput && nameDisplay) {
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          nameDisplay.textContent = `Selected: ${e.target.files[0].name}`;
+        } else {
+          nameDisplay.textContent = "";
+        }
+      });
+    }
+
+    // Tabs switching logic
+    const uploadTabBtn = document.getElementById("uploadTabBtn");
+    const docsTabBtn = document.getElementById("docsTabBtn");
+    const uploadTabContent = document.getElementById("uploadTabContent");
+    const docsTabContent = document.getElementById("docsTabContent");
+
+    const switchTab = (activeBtn, inactiveBtn, activeContent, inactiveContent) => {
+      activeBtn.classList.add("active");
+      inactiveBtn.classList.remove("active");
+      activeContent.classList.add("active");
+      inactiveContent.classList.remove("active");
+
+      // Stagger animate when opening table rows
+      if (activeContent === docsTabContent) {
+        gsap.fromTo(".assignment-table tbody tr", 
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.35, stagger: 0.05, ease: "power2.out" }
+        );
+      } else {
+        gsap.fromTo(".form-box", 
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
+        );
+      }
+    };
+
+    if (uploadTabBtn && docsTabBtn) {
+      uploadTabBtn.addEventListener("click", () => {
+        switchTab(uploadTabBtn, docsTabBtn, uploadTabContent, docsTabContent);
+      });
+
+      docsTabBtn.addEventListener("click", () => {
+        switchTab(docsTabBtn, uploadTabBtn, docsTabContent, uploadTabContent);
+      });
+    }
+
+    // GSAP staggered entrance animations on load
+    document.addEventListener("DOMContentLoaded", () => {
+      gsap.fromTo(".form-box", 
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", delay: 0.2 }
+      );
+    });
+  </script>
+</body>
+
+</html>
